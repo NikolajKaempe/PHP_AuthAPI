@@ -88,7 +88,7 @@ function tryLogin($input, $ip){
         }else{
             header("HTTP/1.1 200 OK");
             http_response_code(200);
-            echo json_encode($authToken);
+            echo json_encode($authToken->toJson());
             return;
         }
     }catch (Exception $e){

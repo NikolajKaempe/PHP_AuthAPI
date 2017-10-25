@@ -6,6 +6,8 @@
  * Time: 15:39
  */
 
+include_once('DatabaseConnection.php');
+
 class StoredProcedures{
 
     public function isUserBanned(){
@@ -24,8 +26,13 @@ class StoredProcedures{
 
     public function loginUser($username,$ipAddress){
         $authToken = new AuthToken();
-
         return $authToken;
+    }
+
+    public function fetchOnlineUser($token){
+        $User = new ResponseUser();
+        //TODO Call procedure "fetchOnlineUser($token)" - if none exists return empty User
+        return $User;
     }
 
     public function createUser(){

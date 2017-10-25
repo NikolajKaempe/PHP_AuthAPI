@@ -6,6 +6,9 @@
  * Time: 12:33
  */
 
+include_once('/../Repositories/StoredProcedures.php');
+include_once('/../Logic/Validation.php');
+
 class AuthToken{
 
     private $token;
@@ -35,7 +38,9 @@ class AuthToken{
     }
 
     public function fetchUser(){
-        //TODO Retrieve the online user with the $token - if none exists throw an error
+        $procedures = new StoredProcedures();
+        $User = $procedures->fetchOnlineUser($this->token);
+        return $User;
     }
 
     public function toJson(){
@@ -44,8 +49,9 @@ class AuthToken{
 
     private function isObjectValid()
     {
-        // TODO replace with Actual Validation
-        if (empty($this->token)) {
+        $validation = new Validation();
+
+        if (!$validation->isValidToken($this->token)) {
             $isValid =  false;
         }else{
             $isValid = true;
