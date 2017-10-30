@@ -10,29 +10,91 @@ include_once('DatabaseConnection.php');
 
 class StoredProcedures{
 
-    public function isUserBanned(){
-        $exists = false;
-         // TODO Call is_user_banned(username,ipaddress);
-        //"{call is_user_banned(?,?,?)}\",username,ipAddress)";
-        return $exists;
+
+    public function isUserBanned($username, $ipAddress){
+
+        try{
+            $connection = $this->getDatabaseConnection();
+            $stmt = $connection->prepare("CALL websecurity.is_user_banned(:username,:ipaddress,@result)");
+            $stmt->bindParam('username', $username, PDO::PARAM_STR );
+            $stmt->bindParam('ipaddress', $ipAddress, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            $result = $connection->query("select @result")->fetch(PDO::FETCH_ASSOC);
+
+            if(!empty($result)){
+                foreach (@$result as $row){
+                    ($row === '0')? $isBanned = false: $isBanned = true;
+                }
+            }else{
+                $isBanned = true;
+            }
+        }
+        catch (PDOException $e){
+            $isBanned = true;
+        }
+        catch (Exception $e){
+            $isBanned = true;
+        }
+
+        return $isBanned;
     }
 
-    public function doUserExists(){
-        $exists = true;
-        // TODO "{? = call do_user_exist(?)}\",username)"
+    public function doUserExists($username){
 
+        try{
+            $connection = $this->getDatabaseConnection();
+            $stmt = $connection->prepare("Select websecurity.do_user_exist(?) as result");
+            $stmt->bindParam(1, $username, PDO::PARAM_STR,28);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if(!empty($result)){
+                foreach (@$result as $row){
+                    ($row === '1')? $exists = true: $exists = false;
+                }
+            }else{
+                $exists = false;
+            }
+        } catch (PDOException $e){
+            $exists = true;
+        }catch (Exception $e){
+            $exists = false;
+        }
         return $exists;
     }
 
     public function loginUser($username,$ipAddress){
         $authToken = new AuthToken();
-        return $authToken;
-    }
 
-    public function fetchOnlineUser($token){
-        $User = new ResponseUser();
-        //TODO Call procedure "fetchOnlineUser($token)" - if none exists return empty User
-        return $User;
+        try{
+            $connection = $this->getDatabaseConnection();
+
+            $stmt = $connection->prepare("CALL websecurity.login_user(:username,:ipAddress,@token,@timeAlive)");
+            $stmt->bindParam('username', $username, PDO::PARAM_STR );
+            $stmt->bindParam('ipAddress', $ipAddress, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            $result = $connection->query("Select @token, @timeAlive")->fetchAll(PDO::FETCH_ASSOC);
+
+            if(!empty($result)){
+                foreach (@$result as $row){
+                    $authToken->construct($row['@token'],$row['@timeAlive']);
+                }
+            }
+
+        }
+        catch (PDOException $e){
+            $authToken = new AuthToken();
+        }
+        catch (Exception $e){
+            $authToken = new AuthToken();
+        }
+
+
+        return $authToken;
     }
 
     public function createUser(){
@@ -40,13 +102,45 @@ class StoredProcedures{
         //StoredProcedures.callStoredProcedure("{call create_user(?,?,?)}",username,hashedPassword,salt);
     }
 
-    public function addFailedLoginAttempt(){
+    public function addFailedLoginAttempt($username,$ipAddress){
 
-        //TODO "{call add_failed_login_attempt(?,?)}\",username,ipAddress)";
+        try{
+            $connection = $this->getDatabaseConnection();
+
+            $stmt = $connection->prepare("Call websecurity.add_failed_login_attempt(:username,:ipAddress)");
+            $stmt->bindParam('username', $username, PDO::PARAM_STR );
+            $stmt->bindParam('ipAddress', $ipAddress, PDO::PARAM_STR);
+            $stmt->execute();
+        }
+        catch (PDOException $e){
+            throw $e;
+            // Do Nothing
+        }
+        catch (Exception $e){
+            throw $e;
+            // Do Nothing
+        }
     }
 
-    public function removeFailedLoginAttempt(){
+    public function removeFailedLoginAttempt($username,$ipAddress){
 
-        //TODO "{call remove_failed_login_attempt(?,?)}\",username,ipAddress)";
+        try{
+            $connection = $this->getDatabaseConnection();
+
+            $stmt = $connection->prepare("CALL websecurity.remove_failed_login_attempts(:username,:ipAddress)");
+            $stmt->bindParam('username', $username, PDO::PARAM_STR );
+            $stmt->bindParam('ipAddress', $ipAddress, PDO::PARAM_STR);
+            $stmt->execute();
+        }
+        catch (PDOException $e){
+            // Do Nothing
+        }
+        catch (Exception $e){
+            // Do Nothing
+        }
+    }
+
+    private function getDatabaseConnection(){
+        return DatabaseConnection::getConnection();
     }
 }

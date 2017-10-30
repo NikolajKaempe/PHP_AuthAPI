@@ -10,7 +10,7 @@ class ResponseUser{
 
     private $username, $role;
 
-    public function __construct($username, $role){
+    public function construct($username, $role){
         $this->username = $username;
         $this->role = $role;
     }

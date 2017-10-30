@@ -12,22 +12,55 @@ class StoredQueries{
 
     public function fetchDatabaseUser($username){
         $user = new ApplicationUser();
-        $database = new DatabaseConnection();
-        $connection = $database->getConnection();
 
-        $sql_query='Select HashedPassword,Salt from websecurity.users where Username=:username';
-        $sth=$connection->prepare($sql_query);
-        $sth->bindParam(":username", $username);
-        $sth->execute();
+        try{
+            $connection = DatabaseConnection::getConnection();
 
-        $result=$sth->fetchAll();
+            $sql_query ='Select HashedPassword,Salt from websecurity.users where Username=:username';
+            $sth = $connection->prepare($sql_query);
+            $sth->bindParam(":username", $username);
+            $sth->execute();
 
-        if(!empty($result)){
-            foreach (@$result as $row){
-                $user->constructPasswordUser($row['HashedPassword'],$row['Salt']);
+            $result=$sth->fetchAll();
+
+            if(!empty($result)){
+                foreach (@$result as $row){
+                    $user->constructPasswordUser($row['HashedPassword'],$row['Salt']);
+                }
             }
+        }catch (Exception $e){
+            $user = new ApplicationUser();
         }
+
         return $user;
     }
+
+    public function fetchOnlineUser($token){
+        $User = new ResponseUser();
+
+        try{
+            $connection = DatabaseConnection::getConnection();
+
+            $sql_query ='Select Username from websecurity.online_users Where Authtoken = :authtoken And AuthLifetime >= CURRENT_TIMESTAMP';
+
+            $sth = $connection->prepare($sql_query);
+            $sth->bindParam(":authtoken", $token );
+            $sth->execute();
+
+            $result=$sth->fetchAll(PDO::FETCH_ASSOC);
+
+            if(!empty($result)){
+                foreach (@$result as $row){
+                    $User->construct($row['Username'],"User");
+                }
+            }
+        }catch (Exception $e){
+            $User = new ApplicationUser();
+        }
+
+        return $User;
+    }
 }
+
+
 

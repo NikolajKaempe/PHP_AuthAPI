@@ -31,6 +31,10 @@ private $salt;
         if (!$this->isValidPswUser()) throw new Exception("Object Not Valid");
     }
 
+    public function getUsername(){ // TODO DELETE
+        return $this->username;
+    }
+
     public function constructOnlineUser($username){
         $this->username = $username;
     }
@@ -78,17 +82,22 @@ private $salt;
         $validation = new Validation();
 
         try{
-            if ($procedures->isUserBanned() == true){
+
+            if (!$validation->isValidIP($ipAddress)){
+                throw new Exception("Invalid IP-Address");
+            }
+
+            if ($procedures->isUserBanned($this->username,$ipAddress) == true){
                 throw new Exception("User ".$this->username." is currently banned.");
             }
-            if ($procedures->doUserExists() == false) {
-                $procedures->addFailedLoginAttempt();
+            if ($procedures->doUserExists($this->username) == false) {
+                $procedures->addFailedLoginAttempt($this->username,$ipAddress);
                 throw new Exception("Incorrect username or password");
             }
 
             $databaseUser = $queries->fetchDatabaseUser($this->username);
             if ($validation->comparePassword($this->password,$databaseUser->hashedPassword,$databaseUser->salt) == false){
-                $procedures->addFailedLoginAttempt();
+                $procedures->addFailedLoginAttempt($this->username,$ipAddress);
                 throw new Exception("Incorrect username or password");
             }else{
                 $procedures->removeFailedLoginAttempt();

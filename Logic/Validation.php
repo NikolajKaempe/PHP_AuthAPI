@@ -59,12 +59,16 @@ class Validation{
         return $isValid;
     }
 
+    public function isValidIP($ipaddress){
+
+    }
+
 
     public function isValidToken($token){
         // lenght 13
         // A-Za-z0-9
 
-        $isValid = false ;
+        $isValid = true ;
 
         return $isValid;
     }

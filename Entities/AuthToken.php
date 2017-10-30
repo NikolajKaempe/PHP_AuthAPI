@@ -6,7 +6,7 @@
  * Time: 12:33
  */
 
-include_once('/../Repositories/StoredProcedures.php');
+include_once('/../Repositories/StoredQueries.php');
 include_once('/../Logic/Validation.php');
 
 class AuthToken{
@@ -22,8 +22,9 @@ class AuthToken{
     public function constructFromHashMap($json)
     {
         $data = json_decode($json, true);
-        foreach ($data AS $key => $value) $this->{$key} = $value;
+
         if (empty($data)) throw new Exception("Object Not Valid");
+        foreach ($data AS $key => $value) $this->{$key} = $value;
         if (!$this->isObjectValid()) throw new Exception("Object Not Valid");
     }
 
@@ -38,8 +39,8 @@ class AuthToken{
     }
 
     public function fetchUser(){
-        $procedures = new StoredProcedures();
-        $User = $procedures->fetchOnlineUser($this->token);
+        $queries = new StoredQueries();
+        $User = $queries->fetchOnlineUser($this->token);
         return $User;
     }
 

@@ -8,6 +8,7 @@
 
 include_once('Entities/AuthToken.php');
 include_once('Entities/ApplicationUser.php');
+include_once('Repositories/StoredProcedures.php'); // TODO DELETE
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = $_SERVER['PATH_INFO'];
@@ -17,7 +18,8 @@ $ipAddress = fetIP();
 switch ($request){
     case '/Register':
         echo $ipAddress;
-        register($reqBody,$ipAddress);
+        addFailedLogin($reqBody);
+        //register($reqBody,$ipAddress);
         break;
     case '/Login':
         tryLogin($reqBody,$ipAddress);
@@ -37,10 +39,25 @@ switch ($request){
         break;
 }
 
-function register($reqBody,$ip){
+// TODO DELETE - TEST ONLY
+function addFailedLogin($reqBody){
+
+    $procedures = new StoredProcedures();
+    $User = new ApplicationUser();
+    try {
+        $User->constructFromHashMap($reqBody);
+        echo $User->getUsername();
+        $procedures->removeFailedLoginAttempt($User->getUsername(), 12313213);
+        echo 'good';
+    }catch (Exception $e){
+        echo $e->getMessage();
+    }
+}
+
+function register($input,$ip){
     $User = new ApplicationUser();
     try{
-        $User->constructFromHashMap($reqBody);
+        $User->constructFromHashMap($input);
     }catch (Exception $e){
         header("HTTP/1.1 400 Bad Request");
         http_response_code(400);
@@ -51,8 +68,9 @@ function register($reqBody,$ip){
     try{
         $authToken = $User->createUser($ip);
         header("HTTP/1.1 200 OK");
+        header('Content-Type: application/json');
         http_response_code(200);
-        echo json_encode($authToken);
+        echo $authToken->toJson();
         return;
     }catch (Exception $e){
         if ($e->getMessage() == "Internal Server Error") {
@@ -87,8 +105,9 @@ function tryLogin($input, $ip){
             return;
         }else{
             header("HTTP/1.1 200 OK");
+            header('Content-Type: application/json');
             http_response_code(200);
-            echo json_encode($authToken->toJson());
+            echo $authToken->toJson();
             return;
         }
     }catch (Exception $e){

@@ -8,17 +8,15 @@
 
 class DatabaseConnection{
 
-    private $db;
+    private static $db = null;
 
-    public function getConnection(){
-        if (!empty($this->db)) return $this->db;
-        try{
-            $this->db = new PDO('mysql:host:localhost',"root","");
-        }catch (Exception $e){
-            throw $e;
+    public static function getConnection(){
+
+        if (!isset(static::$db)) {
+            // TODO CHANGE TO AN APPROPRIATE DB-USER AND NOT ROOT!!
+            static::$db = new PDO('mysql:host:localhost',"root","");
         }
-        // TODO CHANGE TO AN APPROPRIATE DB-USER AND NOT ROOT!!
-        return $this->db;
+        return static::$db;
     }
 }
 
