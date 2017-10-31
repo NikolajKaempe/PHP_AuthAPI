@@ -31,7 +31,7 @@ switch ($request){
             header("HTTP/1.1 200 OK");
             header('Content-Type: application/json');
             http_response_code(200);
-            echo $AuthToken->toJson();
+            echo $User->toJson();
         }
         else{
             header("HTTP/1.1 400 Bad Request");

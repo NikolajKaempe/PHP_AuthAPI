@@ -22,7 +22,8 @@ class Validation{
     }
 
     public function comparePassword($password, $hashedPassword,$salt){
-        return password_verify($password.$salt.$this->pepper,$hashedPassword);
+        $result = password_verify($password.$salt.$this->pepper,$hashedPassword);
+        return $result;
     }
 
     public  function isValidUsername($username){
@@ -60,7 +61,9 @@ class Validation{
     }
 
     public function isValidIP($ipaddress){
+        $isValid = true ;
 
+        return $isValid;
     }
 
 

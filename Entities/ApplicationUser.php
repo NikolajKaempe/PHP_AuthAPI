@@ -31,12 +31,8 @@ private $salt;
         if (!$this->isValidPswUser()) throw new Exception("Object Not Valid");
     }
 
-    public function getUsername(){ // TODO DELETE
+    public function getUsername(){ // TODO Delete
         return $this->username;
-    }
-
-    public function constructOnlineUser($username){
-        $this->username = $username;
     }
 
     public function getHashedPassword()
@@ -59,13 +55,9 @@ private $salt;
         if (!$this->isValidAppUser()) throw new Exception("Object Not Valid");
         $procedures = new StoredProcedures();
 
-        if ($procedures->doUserExists()) {
-            throw new Exception("Username already in use");
-        }
-
         $this->saltAndHashPassword();
         try{
-            $procedures->createUser();
+            $procedures->createUser($this->username,$this->hashedPassword,$this->salt);
         }
         catch (Exception $e){
             throw $e;
@@ -96,11 +88,12 @@ private $salt;
             }
 
             $databaseUser = $queries->fetchDatabaseUser($this->username);
-            if ($validation->comparePassword($this->password,$databaseUser->hashedPassword,$databaseUser->salt) == false){
+
+            if ($validation->comparePassword($this->password,$databaseUser->hashedPassword,$databaseUser->salt) === false){
                 $procedures->addFailedLoginAttempt($this->username,$ipAddress);
                 throw new Exception("Incorrect username or password");
             }else{
-                $procedures->removeFailedLoginAttempt();
+                $procedures->removeFailedLoginAttempt($this->username,$ipAddress);
                 $token = $procedures->loginUser($this->username,$ipAddress);
             }
         }catch (Exception $e){
@@ -111,11 +104,6 @@ private $salt;
 
     public function toJson(){
         return json_encode(get_object_vars($this));
-    }
-
-    public function roleUserToJson(){
-        $roleUser = new ResponseUser($this->username,"User");
-        return $roleUser->toJson();
     }
 
     private function isValidAppUser(){

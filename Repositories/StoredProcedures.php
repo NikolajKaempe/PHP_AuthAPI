@@ -97,9 +97,26 @@ class StoredProcedures{
         return $authToken;
     }
 
-    public function createUser(){
-        // TODO Call procedure "createUser(username, hashedPassword, Salt)" catch duplicate Error.
-        //StoredProcedures.callStoredProcedure("{call create_user(?,?,?)}",username,hashedPassword,salt);
+    public function createUser($username, $hashedPassword, $salt){
+        try{
+            //$connection = new PDO('mysql:host:localhost',"root","");
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("Call websecurity.create_user(:username, :hashedPassword, :salt)");
+            $stmt->bindParam('username', $username);
+            $stmt->bindParam('hashedPassword', $hashedPassword);
+            $stmt->bindParam('salt', $salt);
+            $stmt->execute();
+            if ($stmt->errorCode() == 45000){
+                throw new Exception($stmt->errorInfo()[2]);
+            }elseif ($stmt->errorCode() == 23000){
+                throw new Exception('Username already in use');
+            }
+        }
+        catch (PDOException $e){
+            throw new Exception("Internal Server Error");
+        }catch (Exception $e){
+            throw $e;
+        }
     }
 
     public function addFailedLoginAttempt($username,$ipAddress){
@@ -113,12 +130,10 @@ class StoredProcedures{
             $stmt->execute();
         }
         catch (PDOException $e){
-            throw $e;
-            // Do Nothing
+            throw new Exception("Internal Server Error");
         }
         catch (Exception $e){
-            throw $e;
-            // Do Nothing
+            throw new Exception("Internal Server Error");
         }
     }
 
@@ -133,10 +148,10 @@ class StoredProcedures{
             $stmt->execute();
         }
         catch (PDOException $e){
-            // Do Nothing
+            throw new Exception("Internal Server Error");
         }
         catch (Exception $e){
-            // Do Nothing
+            throw new Exception("Internal Server Error");
         }
     }
 
