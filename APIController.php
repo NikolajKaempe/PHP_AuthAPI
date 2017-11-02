@@ -7,7 +7,8 @@
  */
 
 include_once('Entities/AuthToken.php');
-include_once('Entities/ApplicationUser.php');
+include_once('Entities/ResponseUser.php');
+include_once('Logic/Validation.php');
 
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -16,6 +17,7 @@ $input = file_get_contents('php://input');
 
 switch ($request){
     case '/VerifyToken':
+        /*
         $AuthToken = new AuthToken();
         try{
             $AuthToken->constructFromHashMap($input);
@@ -27,7 +29,8 @@ switch ($request){
         }
 
         $User = $AuthToken->fetchUser();
-        if (empty($User)){
+
+        if (!empty($User->getUsername())){
             header("HTTP/1.1 200 OK");
             header('Content-Type: application/json');
             http_response_code(200);
@@ -35,27 +38,20 @@ switch ($request){
         }
         else{
             header("HTTP/1.1 400 Bad Request");
+            header('Content-Type: application/json');
             http_response_code(400);
-            echo "Invalid Token";
+            echo json_encode("Invalid Token");
         }
-        break;
-    case '/Salt&Hash':
-        $User = new ApplicationUser();
-        try{
-            $User->constructFromHashMap($input);
-        }catch (Exception $e){
-            header("HTTP/1.1 400 Bad Request");
-            http_response_code(400);
-            echo "Invalid Request Body";
-            break;
+        */
+
+        $validation = new Validation();
+        if ($validation->isValidUsername("asasdasdads")){
+            echo ("WUUUHUUU<br>");
+        }else{
+            echo ("-.-<br>");
         }
 
-        $User->saltAndHashPassword();
 
-        header("HTTP/1.1 200 OK");
-        header('Content-Type: application/json');
-        http_response_code(200);
-        echo $User->toJson();
         break;
     default:
         header("HTTP/1.1 404 Not Found");
@@ -64,4 +60,3 @@ switch ($request){
         break;
 }
 
-?>

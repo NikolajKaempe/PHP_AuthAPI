@@ -99,13 +99,13 @@ class StoredProcedures{
 
     public function createUser($username, $hashedPassword, $salt){
         try{
-            //$connection = new PDO('mysql:host:localhost',"root","");
-            $connection = DatabaseConnection::getConnection();
+            $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("Call websecurity.create_user(:username, :hashedPassword, :salt)");
             $stmt->bindParam('username', $username);
             $stmt->bindParam('hashedPassword', $hashedPassword);
             $stmt->bindParam('salt', $salt);
             $stmt->execute();
+
             if ($stmt->errorCode() == 45000){
                 throw new Exception($stmt->errorInfo()[2]);
             }elseif ($stmt->errorCode() == 23000){

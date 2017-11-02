@@ -10,10 +10,6 @@ class Validation{
 
     private $pepper = "IfSaltIsNotEnough,MakeSureToUseSomePepperAsWell!!";
 
-    public function getPepper(){
-        return $this->pepper;
-    }
-
     public function hashPassword($password, $salt){
         $cost = [
             'cost' => 6
@@ -27,31 +23,26 @@ class Validation{
     }
 
     public  function isValidUsername($username){
-        // A-Za-z0-9
-        // lenght 6-32
-        $isValid = true ;
-
-        return $isValid;
+        return ($this->isStringLengthBetween(6,32,$username) &&
+                $this->containsOnlyStandardChars($username)
+                );
     }
 
     public function isValidPassword($password){
-        // A-Z + a-z + 0-9
-        // lenght 8-64
-        $isValid = true ;
-
-        return $isValid;
+        return ($this->isStringLengthBetween(8,32,$password) &&
+            $this->containsNummeric($password) &&
+            $this->containsLowerCase($password) &&
+            $this->containsUpperCase($password));
     }
 
     public function isValidHashedPassword($hashedPassword){
-
-        // lenght = 60
-        // All chars allowed??
-        $isValid = true ;
-
-        return $isValid;
+        return ($this->isStringLengthBetween(59,60,$hashedPassword));
     }
 
     public function isValidSalt($salt){
+
+        return ($this->isStringLengthBetween(12,13,$salt));
+        
         // lenght = 13
         // A-Za-z0-9
 
@@ -76,6 +67,23 @@ class Validation{
         return $isValid;
     }
 
+    private function isStringLengthBetween($min, $max, $input){
+        return !($min > $max || strlen($input) < $min || strlen($input) > $max);
+    }
 
+    private function containsOnlyStandardChars($input){
+        return preg_match("/^[a-zA-Z0-9]+$/",$input);
+    }
 
+    private function containsNummeric($input){
+        return preg_match('/[0-9]+/',$input);
+    }
+
+    private function containsUpperCase($input){
+        return preg_match('/[A-Z]+/',$input);
+    }
+
+    private function containsLowerCase($input){
+        return preg_match('/[a-z]+/',$input);
+    }
 }

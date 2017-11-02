@@ -55,7 +55,7 @@ class StoredQueries{
                 }
             }
         }catch (Exception $e){
-            $User = new ApplicationUser();
+            $User = new ResponseUser();
         }
 
         return $User;
