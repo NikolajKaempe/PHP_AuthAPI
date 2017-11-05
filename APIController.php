@@ -17,7 +17,7 @@ $input = file_get_contents('php://input');
 
 switch ($request){
     case '/VerifyToken':
-        /*
+
         $AuthToken = new AuthToken();
         try{
             $AuthToken->constructFromHashMap($input);
@@ -42,16 +42,6 @@ switch ($request){
             http_response_code(400);
             echo json_encode("Invalid Token");
         }
-        */
-
-        $validation = new Validation();
-        if ($validation->isValidUsername("asasdasdads")){
-            echo ("WUUUHUUU<br>");
-        }else{
-            echo ("-.-<br>");
-        }
-
-
         break;
     default:
         header("HTTP/1.1 404 Not Found");

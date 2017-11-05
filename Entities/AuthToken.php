@@ -6,13 +6,14 @@
  * Time: 12:33
  */
 
-include_once('/../Repositories/StoredQueries.php');
+include_once('/../Repositories/AuthProcedures.php');
 include_once('/../Logic/Validation.php');
 
 /**
  * Class AuthToken
  * An object that contains a unique token & a time it expires
  * and a method to retrieve the ResponseUser associated to specific token.
+ * @author Nikolaj Kæmpe.
  */
 class AuthToken{
 
@@ -84,8 +85,9 @@ class AuthToken{
      * @author Nikolaj Kæmpe.
      */
     public function fetchUser(){
-        $queries = new StoredQueries();
-        $User = $queries->fetchOnlineUser($this->token);
+
+        $procedures = new AuthProcedures();
+        $User = $procedures->fetchOnlineUser($this->token);
         return $User;
     }
 

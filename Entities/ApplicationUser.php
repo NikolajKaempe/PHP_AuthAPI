@@ -6,8 +6,7 @@
  * Time: 12:42
  */
 
-include_once('/../Repositories/StoredProcedures.php');
-include_once('/../Repositories/StoredQueries.php');
+include_once('/../Repositories/AuthProcedures.php');
 include_once('/../Logic/Validation.php');
 include_once('ResponseUser.php');
 
@@ -121,7 +120,7 @@ class ApplicationUser{
      */
     public function createUser($ip){
         if (!$this->isValidAppUser()) throw new Exception("Object Not Valid");
-        $procedures = new StoredProcedures();
+        $procedures = new AuthProcedures();
         $validation = new Validation();
 
         if (!$validation->isValidIP($ip)){
@@ -157,8 +156,7 @@ class ApplicationUser{
      */
     public function tryLogin($ipAddress){
         if (!$this->isValidAppUser()) throw new Exception("Object Not Valid");
-        $procedures = new StoredProcedures();
-        $queries = new StoredQueries();
+        $procedures = new AuthProcedures();
         $validation = new Validation();
 
         try{
@@ -175,7 +173,7 @@ class ApplicationUser{
                 throw new Exception("Incorrect username or password");
             }
 
-            $databaseUser = $queries->fetchDatabaseUser($this->username);
+            $databaseUser = $procedures->fetchDatabaseUser($this->username);
 
             if ($validation->comparePassword($this->password,$databaseUser->hashedPassword,$databaseUser->salt) === false){
                 $procedures->addFailedLoginAttempt($this->username,$ipAddress);

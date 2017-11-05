@@ -2,14 +2,13 @@
 /**
  * Created by PhpStorm.
  * User: Kaempe
- * Date: 19-10-2017
- * Time: 15:39
+ * Date: 5-11-2017
+ * Time: 23:39
  */
 
 include_once('DatabaseConnection.php');
 
-class StoredProcedures{
-
+class AuthProcedures{
 
     public function isUserBanned($username, $ipAddress){
 
@@ -63,6 +62,58 @@ class StoredProcedures{
             $exists = false;
         }
         return $exists;
+    }
+
+    public function fetchDatabaseUser($username){
+        $user = new ApplicationUser();
+
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("call websecurity.fetch_user(:username,@password, @salt)");
+
+            $stmt->bindParam(":username", $username);
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            $result = $connection->query("Select @password, @salt")->fetchAll(PDO::FETCH_ASSOC);
+
+            if(!empty($result)){
+                foreach ($result as $row){
+
+                    $user->constructPasswordUser($row['@password'],$row['@salt']);
+                }
+            }
+
+        }catch (Exception $e){
+            $user = new ApplicationUser();
+        }
+        return $user;
+    }
+
+    public function fetchOnlineUser($token){
+        $user = new ResponseUser();
+
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("call websecurity.fetch_online_user(:token,@username, @role)");
+
+            $stmt->bindParam(":token", $token);
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            $result = $connection->query("Select @username, @role")->fetchAll(PDO::FETCH_ASSOC);
+
+            if(!empty($result)){
+                foreach ($result as $row){
+
+                    $user->construct($row['@username'],$row['@role']);
+                }
+            }
+
+        }catch (Exception $e){
+            $user = new ResponseUser();
+        }
+        return $user;
     }
 
     public function loginUser($username,$ipAddress){
