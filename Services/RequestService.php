@@ -2,6 +2,7 @@
 
 
 include_once('ResponseService.php');
+include_once('./Entities/AuthToken.php');
 
 class RequestService
 {
@@ -42,5 +43,13 @@ class RequestService
         if( strpos( $authHeaderValue, "Token=" ) === false ) {
             ResponseService::ResponsenotAuthorized("Token is missing");
         }
+        
+        $token = RequestService::GetToken();
+
+        $AuthToken = new AuthToken();
+        if(!$AuthToken->isValidToken($token)){
+           ResponseService::ResponsenotAuthorized("Invalid Token"); 
+        }
     }
+
 ?>
