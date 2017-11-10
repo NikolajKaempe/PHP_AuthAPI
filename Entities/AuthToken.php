@@ -117,4 +117,17 @@ class AuthToken{
         }
         return $isValid;
     }
+
+    /*
+        Method checks if a token is valid
+    */
+    public function isValidToken($token){
+        
+        $validationCheck = true;
+
+        // SOME VALIDATION LOGIN HERE.....
+
+        return $validationCheck;
+    }
+
 }
