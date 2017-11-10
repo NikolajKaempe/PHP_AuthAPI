@@ -31,6 +31,14 @@ class RequestService
         $token = substr($headers['Authorization'], strlen("Token="));
         return $token;
     }
+
+    //--------------------------------------------------------------------------
+    // CONVERT JSON STRING TO PHP OBJECT
+    public static function ParseRequestBody($string)
+    {
+        $objects = json_decode($string);
+			return (json_last_error() == 0) ? $objects : "corrupted";
+    }
 } 
 
     //--------------------------------------------------------------------------
@@ -40,6 +48,7 @@ class RequestService
         // remove possible whitespaces
         $authHeaderValue = trim($authHeaderValue);
 
+        // If auth Header contains NO TOKEN
         if( strpos( $authHeaderValue, "Token=" ) === false ) {
             ResponseService::ResponsenotAuthorized("Token is missing");
         }
