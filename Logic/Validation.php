@@ -167,4 +167,43 @@ class Validation{
     public function containsLowerCase($input){
         return preg_match('/[a-z]+/',$input)? true : false;
     }
+
+
+    /*
+        CHECKS IF OBJECT HAS
+            specific property and it is not empty
+    */
+    public function notNullValidation($object, $propertyName){
+        
+        $propertyExists = !property_exists($object, $propertyName);
+        $propertyHasValue = empty($object->{"$propertyName"});
+        
+        if($propertyExists && $propertyHasValue){ 
+            return false;
+        }
+        
+        return true;
+    }
+
+
+    //------------------------------------------------------------
+    /*
+        CHECKS IF OBJECT HAS
+            the specified properties AND
+            properties are not empty
+    */
+    public function hasAllProperties($object, $propertiesToCheck){
+        
+        $isValid = false;
+
+        foreach ($propertiesToCheck as $property) {
+            $isValid = $this->notNullValidation($object, $property);
+            if(!$isValid){
+                break;
+            }
+        }
+        
+        return $isValid;
+    }
+    
 }
