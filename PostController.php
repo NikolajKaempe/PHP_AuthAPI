@@ -2,7 +2,9 @@
 
 include_once('./Services/RequestService.php');
 include_once('./Services/ResponseService.php');
+include_once('./Services/SanitizeService.php');
 include_once('./Repositories/PostsRepository.php');
+include_once('./Entities/PostModel.php');
 
 $method = $_SERVER['REQUEST_METHOD'];
 $input = file_get_contents('php://input');
@@ -54,7 +56,6 @@ switch ($method){
 
             // get posts by user
             $posts = $postRepository->getPostsByUser($token, $_GET['username']);
-
             echo json_encode( $posts, JSON_UNESCAPED_UNICODE );
             die;
         }
@@ -63,11 +64,11 @@ switch ($method){
         if($postsAmount){
 
             $posts = $postRepository->getPosts($token, $_GET['amount']);
-
             echo json_encode( $posts, JSON_UNESCAPED_UNICODE );
             die;
         }
-            
+
+    // END OF GET POSTS      
     break;
 
     //--------------------------------------------------------------------------
@@ -75,17 +76,47 @@ switch ($method){
     //--------------------------------------------------------------------------
     case 'POST':
 
+        // Convert JSON to PHP object
         $sRequestBody = file_get_contents('php://input');
         $jRequestBody = RequestService::ParseRequestBody($sRequestBody);
 
+        // IF BAD JSON
         if($jRequestBody === 'corrupted'){
-            ResponseService::ResponseBadRequest();
-        }
-        else{
-            ResponseService::ResponseOk("Ok Request");
+            ResponseService::ResponseBadRequest("Bad Request");
         }
 
-    break;
+        // Check if RequestBody Contains required data
+        $Validation  = new Validation();
+        $isValidData = $Validation->hasAllProperties(
+            $jRequestBody, Post::getRequiredProperties()
+        );
+        
+        // If RequestBody Doesn't contain required fields
+        if(!$isValidData){
+            ResponseService::ResponseBadRequest("Bad Request");
+        }
+
+        // SANITIZE Post Properties
+        $sanizedRequestBody = SanitizeService::SanitizeObjectsProperties(
+            $jRequestBody, Post::getRequiredProperties());
+        
+        
+        // SAVE POST TO DB
+        $newPostId = $postRepository->createPost(
+            $token, 
+            $sanizedRequestBody->title,
+            $sanizedRequestBody->content
+        );
+
+        if(isset($newPostId)){
+            ResponseService::ResponseCreated("Post Successfully Created");
+        }
+
+        //@TODO - WHAT RESPONSE IN CASE F POST IS NOT CREATED 
+        // END OF CREATE POST
+        break;
+
 }
+
 
 ?>
