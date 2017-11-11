@@ -14,6 +14,18 @@ class ResponseService
         die;
     }
 
+    // Responds with 201 status and message
+    public static function ResponseCreated($msg = "undefined")
+    {
+        header("HTTP/1.1 201");
+        header('Content-Type: application/json');
+        http_response_code(201);
+        if($msg != "undefined"){
+            echo '{"messsage":"'.$msg.'"}';
+        }
+        die;
+    }
+
     // Responds with 401 status and message
     public static function ResponseBadRequest($msg = "undefined")
     {
