@@ -78,6 +78,37 @@ class PostsRepository{
     }
     
     //--------------------------------------------------------------------------
+    public function createPost($authtoken, $title, $content){
+
+        $newPostId;
+
+        try{
+            $connection = $this->getDatabaseConnection();
+            $stmt = $connection->prepare("CALL websecurity.post_create(:authtoken ,:title, :content ,@postId)");
+            $stmt->bindParam('authtoken', $authtoken, PDO::PARAM_STR );
+            $stmt->bindParam('title', $title, PDO::PARAM_STR);
+            $stmt->bindParam('content', $content, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            $result = $connection->query("select @postId")->fetch(PDO::FETCH_ASSOC);
+
+            //@TODO - if post is not create ?????
+
+            if(!empty($result)){
+               $newPostId = $result["@postId"];
+            }
+        }
+        catch (PDOException $e){
+           // @TODO WHAT SHOUL HAPPEN HERE ?
+        }
+        catch (Exception $e){
+           // @TODO WHAT SHOUL HAPPEN HERE ?
+        }
+
+        return  $newPostId;
+    }
+
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
 
