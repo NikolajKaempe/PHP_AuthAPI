@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="958ae5de-f3a1-47e9-ba97-bc7c5de04a18" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Repositories/StoredProcedures.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Repositories/StoredQueries.php" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/APIController.php" afterPath="$PROJECT_DIR$/APIController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Entities/ApplicationUser.php" afterPath="$PROJECT_DIR$/Entities/ApplicationUser.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Entities/AuthToken.php" afterPath="$PROJECT_DIR$/Entities/AuthToken.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Logic/Validation.php" afterPath="$PROJECT_DIR$/Logic/Validation.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Repositories/AuthProcedures.php" afterPath="$PROJECT_DIR$/Repositories/AuthProcedures.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UserController.php" afterPath="$PROJECT_DIR$/UserController.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -42,8 +40,8 @@
       <file leaf-file-name="ApplicationUser.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Entities/ApplicationUser.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="63">
-              <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+            <state relative-caret-position="293">
+              <caret line="169" column="0" lean-forward="true" selection-start-line="169" selection-start-column="0" selection-end-line="169" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -52,8 +50,8 @@
       <file leaf-file-name="AuthProcedures.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Repositories/AuthProcedures.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+            <state relative-caret-position="336">
+              <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -62,8 +60,8 @@
       <file leaf-file-name="Validation.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Logic/Validation.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-587">
-              <caret line="108" column="37" lean-forward="true" selection-start-line="108" selection-start-column="37" selection-end-line="108" selection-end-column="37" />
+            <state relative-caret-position="-2143">
+              <caret line="34" column="18" lean-forward="false" selection-start-line="34" selection-start-column="15" selection-end-line="34" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -72,8 +70,8 @@
       <file leaf-file-name="DatabaseConnection.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Repositories/DatabaseConnection.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="15" column="23" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="42">
+              <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -82,8 +80,8 @@
       <file leaf-file-name="UserController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/UserController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="16" column="18" lean-forward="false" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+            <state relative-caret-position="587">
+              <caret line="114" column="39" lean-forward="false" selection-start-line="114" selection-start-column="25" selection-end-line="114" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -92,8 +90,8 @@
       <file leaf-file-name="APIController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/APIController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+            <state relative-caret-position="504">
+              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -103,7 +101,7 @@
         <entry file="file://$PROJECT_DIR$/../../bin/apache/apache2.4.23/conf/extra/httpd-vhosts.conf">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="273">
-              <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+              <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -134,6 +132,8 @@
       <find>HTTP</find>
       <find>IP</find>
       <find>fetch</find>
+      <find>doUser</find>
+      <find>fetchSa</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -154,18 +154,18 @@
         <option value="$PROJECT_DIR$/Entities/RoleUser.php" />
         <option value="$PROJECT_DIR$/Entities/IModel.php" />
         <option value="$PROJECT_DIR$/Repositories/DatabaseConnection.php" />
-        <option value="$PROJECT_DIR$/UserController.php" />
         <option value="$PROJECT_DIR$/PostController.php" />
         <option value="$PROJECT_DIR$/Entities/Post.php" />
         <option value="$PROJECT_DIR$/Repositories/StoredQueries.php" />
         <option value="$PROJECT_DIR$/Entities/ResponseUser.php" />
         <option value="$PROJECT_DIR$/APIController.php" />
         <option value="$PROJECT_DIR$/../../bin/apache/apache2.4.23/conf/extra/httpd-vhosts.conf" />
-        <option value="$PROJECT_DIR$/Logic/Validation.php" />
         <option value="$PROJECT_DIR$/Repositories/StoredProcedures.php" />
-        <option value="$PROJECT_DIR$/Repositories/AuthProcedures.php" />
         <option value="$PROJECT_DIR$/Entities/AuthToken.php" />
+        <option value="$PROJECT_DIR$/UserController.php" />
+        <option value="$PROJECT_DIR$/Logic/Validation.php" />
         <option value="$PROJECT_DIR$/Entities/ApplicationUser.php" />
+        <option value="$PROJECT_DIR$/Repositories/AuthProcedures.php" />
       </list>
     </option>
   </component>
@@ -201,7 +201,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -228,7 +228,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="AndroidView" />
     </panes>
@@ -369,12 +369,18 @@
       <workItem from="1509539981196" duration="11230000" />
       <workItem from="1509569729839" duration="10909000" />
       <workItem from="1509697467274" duration="7338000" />
-      <workItem from="1509890018978" duration="4638000" />
+      <workItem from="1509890018978" duration="4767000" />
+      <workItem from="1509974706762" duration="676000" />
+      <workItem from="1509994419994" duration="2338000" />
+      <workItem from="1510049390866" duration="4179000" />
+      <workItem from="1510586330185" duration="606000" />
+      <workItem from="1510603604876" duration="1422000" />
+      <workItem from="1510647008360" duration="5241000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="155998000" />
+    <option name="totallyTimeSpent" value="170589000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1060" extended-state="6" />
@@ -442,14 +448,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/StoredQueries.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="588">
-          <caret line="33" column="0" lean-forward="true" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Repositories/StoredQueries.php" />
     <entry file="file://$PROJECT_DIR$/Entities/AuthToken.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1092">
@@ -466,14 +465,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/StoredProcedures.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="24" column="50" lean-forward="false" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Repositories/StoredProcedures.php" />
     <entry file="file://$PROJECT_DIR$/Logic/Validation.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -498,14 +490,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/StoredQueries.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="5" lean-forward="false" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Repositories/StoredQueries.php" />
     <entry file="file://$PROJECT_DIR$/Entities/AuthToken.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="966">
@@ -514,22 +499,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/StoredProcedures.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/StoredQueries.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="5" lean-forward="true" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Repositories/StoredProcedures.php" />
+    <entry file="file://$PROJECT_DIR$/Repositories/StoredQueries.php" />
     <entry file="file://$PROJECT_DIR$/Logic/Validation.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -684,71 +655,17 @@
     <entry file="file://$PROJECT_DIR$/../../bin/apache/apache2.4.23/conf/extra/httpd-vhosts.conf">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
-          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/StoredQueries.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/StoredProcedures.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
-          <caret line="31" column="9" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="211" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Logic/Validation.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-587">
-          <caret line="108" column="37" lean-forward="true" selection-start-line="108" selection-start-column="37" selection-end-line="108" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/DatabaseConnection.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="23" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Repositories/StoredQueries.php" />
+    <entry file="file://$PROJECT_DIR$/Repositories/StoredProcedures.php" />
     <entry file="file://$PROJECT_DIR$/APIController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UserController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="16" column="18" lean-forward="false" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Entities/ApplicationUser.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Entities/AuthToken.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="8" column="35" lean-forward="false" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
+        <state relative-caret-position="504">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -761,10 +678,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Entities/AuthToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="8" column="35" lean-forward="false" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Entities/ApplicationUser.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="169" column="0" lean-forward="true" selection-start-line="169" selection-start-column="0" selection-end-line="169" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Logic/Validation.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2143">
+          <caret line="34" column="18" lean-forward="false" selection-start-line="34" selection-start-column="15" selection-end-line="34" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UserController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="587">
+          <caret line="114" column="39" lean-forward="false" selection-start-line="114" selection-start-column="25" selection-end-line="114" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Repositories/DatabaseConnection.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Repositories/AuthProcedures.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+        <state relative-caret-position="336">
+          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding />
         </state>
       </provider>

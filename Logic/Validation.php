@@ -27,10 +27,12 @@ class Validation{
      * @author Nikolaj Kæmpe.
      */
     public function hashPassword($password, $salt){
+        /*
         $cost = [
             'cost' => 6
         ];
-        return password_hash($password.$salt.$this->pepper, PASSWORD_BCRYPT, $cost);
+        */
+        return md5($password.$salt.$this->pepper);
     }
 
     /**
@@ -99,7 +101,7 @@ class Validation{
 
     /**
      * Verifies that the input parameter is between 7-20 characters.
-     * @param $ipAddress, a string representing the IPAddress of the HTTP-request
+     * @param $ipAddress, a string representing the IPAddress of the HTTP-request.
      * @return bool, representing whether the supplied IP address is valid or not.
      * @author Nikolaj Kæmpe.
      */

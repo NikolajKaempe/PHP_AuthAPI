@@ -165,23 +165,11 @@ class ApplicationUser{
                 throw new Exception("Invalid IP-Address");
             }
 
-            if ($procedures->isUserBanned($this->username,$ipAddress) == true){
-                throw new Exception("User ".$this->username." is currently banned.");
-            }
-            if ($procedures->doUserExists($this->username) == false) {
-                $procedures->addFailedLoginAttempt($this->username,$ipAddress);
-                throw new Exception("Incorrect username or password");
-            }
+            $this->salt = $procedures->fetchSalt($this->username);
+            $this->hashedPassword = $validation->hashPassword($this->password,$this->salt);
 
-            $databaseUser = $procedures->fetchDatabaseUser($this->username);
+            $token = $procedures->loginUser($this->username,$ipAddress,$this->hashedPassword);
 
-            if ($validation->comparePassword($this->password,$databaseUser->hashedPassword,$databaseUser->salt) === false){
-                $procedures->addFailedLoginAttempt($this->username,$ipAddress);
-                throw new Exception("Incorrect username or password");
-            }else{
-                $procedures->removeFailedLoginAttempt($this->username,$ipAddress);
-                $token = $procedures->loginUser($this->username,$ipAddress);
-            }
         }catch (Exception $e){
             throw $e;
         }

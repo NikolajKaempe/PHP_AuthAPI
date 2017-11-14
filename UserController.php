@@ -91,8 +91,8 @@ function tryLogin($input, $ip){
             echo json_encode("Internal Server Error");
             return;
         }else{
-            header("HTTP/1.1 200 OK");
-            header('Content-Type: application/json');
+           // header("HTTP/1.1 200 OK");
+            //header('Content-Type: application/json');
             http_response_code(200);
             echo $authToken->toJson();
             return;
