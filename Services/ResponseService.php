@@ -14,6 +14,16 @@ class ResponseService
         die;
     }
 
+    // Responds with 200 status and data
+    public static function ResponseJSON($data)
+    {
+        header("HTTP/1.1 200 OK");
+        header('Content-Type: application/json');
+        http_response_code(200);
+        echo json_encode( $data, JSON_UNESCAPED_UNICODE );
+        die;
+    }
+
     // Responds with 201 status and message
     public static function ResponseCreated($msg = "undefined")
     {
