@@ -55,10 +55,13 @@ class RequestService
         
         $token = RequestService::GetToken();
 
-        $AuthToken = new AuthToken();
-        if(!$AuthToken->isValidToken($token)){
-           ResponseService::ResponsenotAuthorized("Invalid Token"); 
+        $AuthToken = new AuthToken($token);
+        $isValidToken = $AuthToken->isValidToken();
+
+        if(!$isValidToken){
+           ResponseService::ResponsenotAuthorized("Not Authorized"); 
         }
+
     }
 
 ?>

@@ -35,6 +35,10 @@ class AuthToken{
      * @param $timeAlive, a timeStamp representing the time the token expires.
      * @author Nikolaj Kæmpe.
      */
+    public function construct($token){
+        $this->token = $token;
+    }
+
     public function construct($token,$timeAlive){
         $this->token = $token;
         $this->timeAlive= $timeAlive;
@@ -121,11 +125,18 @@ class AuthToken{
     /*
         Method checks if a token is valid
     */
-    public function isValidToken($token){
+    public function isValidToken(){
         
-        $validationCheck = true;
+        $isValidFormat = $this->isObjectValid();
+        $isExistingTOken = $this->fetchUser();
+        
+        /*
+            Token is valis if:
+                -> it has correct format
+                -> in DB with have a user associated with the given token
+        */
 
-        // SOME VALIDATION LOGIN HERE.....
+        $isValidToken = ($isValidFormat && !empty($AuthToken->fetchUser());
 
         return $validationCheck;
     }
