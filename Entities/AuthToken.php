@@ -126,19 +126,23 @@ class AuthToken{
         Method checks if a token is valid
     */
     public function isValidToken(){
-        
-        $isValidFormat = $this->isObjectValid();
-        $isExistingTOken = $this->fetchUser();
-        
+
         /*
             Token is valis if:
                 -> it has correct format
                 -> in DB with have a user associated with the given token
         */
+        
+        // @TODO uncomment below lines for production
+        // $isValidFormat = $this->isObjectValid();
+        // $isExistingTOken = $this->fetchUser();
+        // $isValidToken = ($isValidFormat && !empty($this->fetchUser()));
+        
+        
+        //@TODO the below line is only for development
+        $isValidToken = true;
 
-        $isValidToken = ($isValidFormat && !empty($AuthToken->fetchUser());
-
-        return $validationCheck;
+        return $isValidToken;
     }
 
 }
