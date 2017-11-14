@@ -51,21 +51,27 @@ switch ($method){
         $postsAmount = isset($_GET['amount']) && !empty($_GET['amount']);
         $postsByUser = isset($_GET['username']) && !empty($_GET['username']);
 
+        if($postsAmount){
+
+            if(!is_numeric($_GET['amount'])){
+                ResponseService::ResponseBadRequest("Bad Request");
+            }
+
+            $postsAmount = $_GET['amount'];
+        }
+
         // RETURN POST BY SPECIFIC USER
         if($postsByUser){
-
-            // get posts by user
             $posts = $postRepository->getPostsByUser($token, $_GET['username']);
-            echo json_encode( $posts, JSON_UNESCAPED_UNICODE );
-            die;
+            ResponseService::ResponseJSON($posts);
         }
+
         
-        // RETURN ALL POSTS
+        // RETURN RECENT POSTS BY VARIOUS USERS
         if($postsAmount){
 
             $posts = $postRepository->getPosts($token, $_GET['amount']);
-            echo json_encode( $posts, JSON_UNESCAPED_UNICODE );
-            die;
+             ResponseService::ResponseJSON($posts);
         }
 
     // END OF GET POSTS      
