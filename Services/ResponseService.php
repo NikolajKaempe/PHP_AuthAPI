@@ -26,7 +26,7 @@ class ResponseService
         die;
     }
 
-    // Responds with 401 status and message
+    // Responds with 400 status and message
     public static function ResponseBadRequest($msg = "undefined")
     {
         header("HTTP/1.1 400");
