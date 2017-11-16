@@ -25,8 +25,9 @@ class SanitizeService
     }
 
     //--------------------------------------------------------------------------
-    // Sanitize ALL properties of the object
-    public static function SanitizeObject($object)
+    // htmlspecialchars — Convert special characters to HTML entities
+    // Method is equal to SanitizeProperty
+    public static function SanitizeString($stringTobeSanitized)
     {
        return htmlspecialchars($stringTobeSanitized, ENT_QUOTES, 'UTF-8');
     }
