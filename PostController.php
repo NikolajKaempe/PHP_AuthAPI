@@ -6,7 +6,7 @@ include_once('./Services/SanitizeService.php');
 include_once('./Repositories/PostsRepository.php');
 include_once('./Entities/PostModel.php');
 
-$method = $_SERVER['REQUEST_METHOD'];
+$requestHttpMethod = $_SERVER['REQUEST_METHOD'];
 $input = file_get_contents('php://input');
 
 
@@ -41,7 +41,7 @@ $token = RequestService::GetToken();
 $postRepository = new PostsRepository();
 
 // HANDLE REQUEST
-switch ($method){
+switch ($requestHttpMethod){
 
     //--------------------------------------------------------------------------
     // GET POSTS
@@ -71,7 +71,7 @@ switch ($method){
         if($postsAmount){
 
             $posts = $postRepository->getPosts($token, $_GET['amount']);
-             ResponseService::ResponseJSON($posts);
+            ResponseService::ResponseJSON($posts);
         }
 
     // END OF GET POSTS      
