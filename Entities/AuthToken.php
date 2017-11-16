@@ -35,9 +35,6 @@ class AuthToken{
      * @param $timeAlive, a timeStamp representing the time the token expires.
      * @author Nikolaj Kæmpe.
      */
-    public function construct($token){
-        $this->token = $token;
-    }
 
     public function construct($token,$timeAlive){
         $this->token = $token;
