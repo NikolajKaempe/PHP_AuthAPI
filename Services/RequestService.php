@@ -91,6 +91,11 @@ class RequestService
     public static function isNumeric($paramName){
         return is_numeric($_GET[$paramName]);
     }
+
+    // CHECK IF URL PARAM DEFINED && IT IS A NUMBER
+    public static  function isNumericUrlParamDefined($paramName){
+        return RequestService::isParamSet($paramName) && RequestService::isNumeric($paramName);
+    }
 } 
 
     //--------------------------------------------------------------------------
