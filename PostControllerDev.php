@@ -22,6 +22,8 @@ $input = file_get_contents('php://input');
 */
 //------------------------------------------------------------------------------
 
+RequestService::enableCORS();
+
 //------------------------------------------------------------------------------
 /*
     RequestService::TokenCheck() Checks if REQUEST contains:
