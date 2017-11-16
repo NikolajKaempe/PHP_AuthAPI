@@ -9,6 +9,8 @@ include_once('./Entities/PostModel.php');
 $requestHttpMethod = $_SERVER['REQUEST_METHOD'];
 $input = file_get_contents('php://input');
 
+$POSTS_DEFAULT_AMOUNT = 50;
+$POSTS_DEFAULT_OFFSET = 30;
 
 //------------------------------------------------------------------------------
 /*
@@ -48,31 +50,29 @@ switch ($requestHttpMethod){
     //--------------------------------------------------------------------------
     case 'GET':
 
-        $postsAmount = isset($_GET['amount']) && !empty($_GET['amount']);
-        $postsByUser = isset($_GET['username']) && !empty($_GET['username']);
-
-        if($postsAmount){
-
-            if(!is_numeric($_GET['amount'])){
-                ResponseService::ResponseBadRequest("Bad Request");
-            }
-
-            $postsAmount = $_GET['amount'];
-        }
+        RequestService::validateNumericUrlParam('user_id');
+        $user_id = $_GET['user_id']; 
+        $postsAmount = RequestService::isNumericUrlParamDefined('amount') ? $_GET['amount'] : $POSTS_DEFAULT_AMOUNT;
+        $offset      = RequestService::isNumericUrlParamDefined('offset') ? $_GET['offset'] : $POSTS_DEFAULT_OFFSET;
 
         // RETURN POST BY SPECIFIC USER
         if($postsByUser){
-            $posts = $postRepository->getPostsByUser($token, $_GET['username']);
+            $posts = $postRepository->getPostsByUser(
+                $token, 
+                $user_id 
+                $postsAmount,
+                $offset
+            );
             ResponseService::ResponseJSON($posts);
         }
 
-        
-        // RETURN RECENT POSTS BY VARIOUS USERS
-        if($postsAmount){
-
-            $posts = $postRepository->getPosts($token, $_GET['amount']);
-            ResponseService::ResponseJSON($posts);
-        }
+        // RETURN RECENT POSTS BY ALL USERS
+        $posts = $postRepository->getPosts(
+            $token, 
+            $postsAmount,
+            $offset
+        );
+        ResponseService::ResponseJSON($posts);
 
     // END OF GET POSTS      
     break;
@@ -119,12 +119,10 @@ switch ($requestHttpMethod){
         }else{
             ResponseService::ResponseInternalError("Internal Server Error");
         }
-
-        //@TODO - WHAT RESPONSE IN CASE F POST IS NOT CREATED 
+        
         // END OF CREATE POST
         break;
 
 }
-
 
 ?>
