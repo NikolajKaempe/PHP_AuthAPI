@@ -50,8 +50,8 @@ switch ($requestHttpMethod){
         RequestService::validateNumericUrlParam('post_id');
         $post_id = $_GET['post_id'];
 
-        $amount = isNumericParam('amount') ? $_GET['amount'] : 25;
-        $offset = isNumericParam('offset') ? $_GET['offset'] : 0;
+        $amount = RequestService::isNumericUrlParamDefined('amount') ? $_GET['amount'] : 25;
+        $offset = RequestService::isNumericUrlParamDefined('offset') ? $_GET['offset'] : 0;
 
         $comments = $commentsRepository->getCommentsOfPost($token, $post_id, $amount, $offset);
         ResponseService::ResponseJSON($comments);
@@ -105,7 +105,4 @@ switch ($requestHttpMethod){
     break;
 }
 
-    function isNumericParam($paramName){
-        return RequestService::isParamSet($paramName) && RequestService::isNumeric($paramName);
-    }
 ?>
