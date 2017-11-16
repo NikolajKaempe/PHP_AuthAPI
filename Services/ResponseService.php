@@ -63,5 +63,19 @@ class ResponseService
 
         die;
     }
+
+    // Responds with 500 status and message
+    public static function ResponseInternalError($msg = "undefined")
+    {
+        header("HTTP/1.1 500");
+        header('Content-Type: application/json');
+        http_response_code(500);
+
+        if($msg != "undefined"){
+            echo '{"messsage":"'.$msg.'"}';
+        }
+
+        die;
+    }
 }
 ?>
