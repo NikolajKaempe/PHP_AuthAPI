@@ -116,6 +116,8 @@ switch ($requestHttpMethod){
 
         if(isset($newPostId)){
             ResponseService::ResponseCreated("Post Successfully Created");
+        }else{
+            ResponseService::ResponseInternalError("Internal Server Error");
         }
 
         //@TODO - WHAT RESPONSE IN CASE F POST IS NOT CREATED 

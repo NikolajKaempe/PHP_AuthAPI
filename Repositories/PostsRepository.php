@@ -62,7 +62,7 @@ class PostsRepository{
                     
                     // CONSTRUCT POSTS.....
                     // @TODO GET $id, $title, $content, $createdAt from $row
-                    array_push($postsArray, new Post($id, $title, $content, $createdAt));
+                    array_push($postsArray, new Post($row['id'], $row['title'], $row['content'], $createdAt));
                 }
             }
         }
@@ -84,19 +84,19 @@ class PostsRepository{
 
         try{
             $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("CALL websecurity.post_create(:authtoken ,:title, :content ,@postId)");
+            $stmt = $connection->prepare("CALL websecurity.post_create(:authtoken ,:title, :content ,@post_id)");
             $stmt->bindParam('authtoken', $authtoken, PDO::PARAM_STR );
             $stmt->bindParam('title', $title, PDO::PARAM_STR);
             $stmt->bindParam('content', $content, PDO::PARAM_STR);
             $stmt->execute();
             $stmt->closeCursor();
 
-            $result = $connection->query("select @postId")->fetch(PDO::FETCH_ASSOC);
+            $result = $connection->query("select @post_id")->fetch(PDO::FETCH_ASSOC);
 
             //@TODO - if post is not create ?????
 
             if(!empty($result)){
-               $newPostId = $result["@postId"];
+               $newPostId = $result["@post_id"];
             }
         }
         catch (PDOException $e){
