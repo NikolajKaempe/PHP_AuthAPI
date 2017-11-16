@@ -67,6 +67,30 @@ class RequestService
             exit(0);
         }
     }
+
+    //--------------------------------------------------------------------------
+    // VALIDATE NUMERIC PARAM
+
+    public static function validateNumericUrlParam($paramName){
+
+        $isParam = isset($_GET[$paramName]) && !empty($_GET[$paramName] && is_numeric($_GET[$paramName]));
+
+        if(!$isParam){
+            ResponseService::ResponseBadRequest("Bad Request");
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // IS PARAM IS SET
+    public static function isParamSet($paramName){
+        return isset($_GET[$paramName]) && !empty($_GET[$paramName]);
+    }
+
+    //--------------------------------------------------------------------------
+    // IS PARAM NUMERIC
+    public static function isNumeric($paramName){
+        return is_numeric($_GET[$paramName]);
+    }
 } 
 
     //--------------------------------------------------------------------------
@@ -92,4 +116,5 @@ class RequestService
 
     }
 
+    
 ?>
