@@ -2,7 +2,7 @@
 
 
 include_once('ResponseService.php');
-include_once('./Entities/AuthToken.php');
+include_once('/../Entities/AuthToken.php');
 
 class RequestService
 {
@@ -96,6 +96,17 @@ class RequestService
     public static  function isNumericUrlParamDefined($paramName){
         return RequestService::isParamSet($paramName) && RequestService::isNumeric($paramName);
     }
+
+    public static function fetIP(){
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
 } 
 
     //--------------------------------------------------------------------------
@@ -112,14 +123,10 @@ class RequestService
         
         $token = RequestService::GetToken();
 
-        $AuthToken = new AuthToken($token);
-        $isValidToken = $AuthToken->isValidToken();
-
-        if(!$isValidToken){
-           ResponseService::ResponsenotAuthorized("Not Authorized"); 
-        }
+        new AuthToken($token);
 
     }
+
 
     
 ?>

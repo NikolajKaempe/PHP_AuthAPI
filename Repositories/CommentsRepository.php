@@ -1,17 +1,17 @@
 <?php
 
 include_once('DatabaseConnection.php');
-include_once('./../Services/SanitizeService.php');
+include_once('/../Services/SanitizeService.php');
 
 class CommentsRepository{
 
-    public function getCommentsOfPost($token, $post_id, $amount, $offset){}
+    public function getCommentsOfPost($token, $post_id, $amount, $offset){
         $commentsArray = array();
 
         try{
             $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("CALL websecurity.comment_get_from_post(:authtoken, :post_id, :amount, :offset ,@result)");
-            $stmt->bindParam('authtoken', $authtoken, PDO::PARAM_STR );
+            $stmt->bindParam("authtoken", $token, PDO::PARAM_STR );
             $stmt->bindParam('post_id', $post_id, PDO::PARAM_INT);
             $stmt->bindParam('amount', $amount, PDO::PARAM_INT);
             $stmt->bindParam('offset', $offset, PDO::PARAM_INT);
@@ -47,13 +47,13 @@ class CommentsRepository{
 
     //---------------------------------------------------------------------
 
-    public function createComment($token, $post_id, $content){}
-        $newCommentId;
+    public function createComment($token, $post_id, $content){
+        $newCommentId = 0;
 
         try{
             $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("CALL websecurity.comment_create(:authtoken ,:post_id, :content ,@comment_id)");
-            $stmt->bindParam('authtoken', $authtoken, PDO::PARAM_STR );
+            $stmt->bindParam('authtoken', $token, PDO::PARAM_STR );
             $stmt->bindParam('post_id', $post_id, PDO::PARAM_INT);
             $stmt->bindParam('content', $content, PDO::PARAM_STR);
             $stmt->execute();

@@ -6,13 +6,13 @@
  * Time: 12:33
  */
 
-include_once('/../Repositories/AuthProcedures.php');
 include_once('/../Logic/Validation.php');
+include_once('/../Services/ResponseService.php');
+
 
 /**
  * Class AuthToken
  * An object that contains a unique token & a time it expires
- * and a method to retrieve the ResponseUser associated to specific token.
  * @author Nikolaj Kæmpe.
  */
 class AuthToken{
@@ -30,32 +30,26 @@ class AuthToken{
     private $timeAlive;
 
     /**
+     * This constructor is used when instantiating the object from the 'RequestServer'.
+     * @param $token, is a string representing a unique value associated with the User that is logged in.
+     * @author Nikolaj Kæmpe.
+     */
+    public function __construct($token){
+        $this->token = $token;
+        $this->failOnInvalidModel();
+    }
+
+
+    /**
      * This constructor should be used when instantiating the object from database fields.
      * @param $token, is a string representing a unique value associated with the User that is logged in.
      * @param $timeAlive, a timeStamp representing the time the token expires.
      * @author Nikolaj Kæmpe.
      */
-
     public function construct($token,$timeAlive){
         $this->token = $token;
         $this->timeAlive= $timeAlive;
-    }
-
-    /**
-     * This constructor should be used when instantiating the object from a HTTP request body
-     * If the Object is not valid after parsing the input an error is returned.
-     * Only the 'token' will be used, the other fields will be set internally by other methods.
-     * @param $json, is a Map, typically the body of a HTTP request.
-     * @throws Exception if the object is not valid after parsing the input.
-     * @author Nikolaj Kæmpe.
-     */
-    public function constructFromHashMap($json)
-    {
-        $data = json_decode($json, true);
-
-        if (empty($data)) throw new Exception("Object Not Valid");
-        foreach ($data AS $key => $value) $this->{$key} = $value;
-        if (!$this->isObjectValid()) throw new Exception("Object Not Valid");
+        $this->failOnInvalidModel();
     }
 
     /**
@@ -79,67 +73,21 @@ class AuthToken{
     }
 
     /**
-     * Uses the method called 'fetchOnlineUser' in the StoredQueries class
-     * to create a ResponseUser Object from the supplied token.
-     * If the token dos'ent matches a online user on the database, an empty ResponseUser object is returned.
-     * @return ResponseUser, created with User data that matches the supplied token.
-     * @author Nikolaj Kæmpe.
-     */
-    public function fetchUser(){
-
-        $procedures = new AuthProcedures();
-        $User = $procedures->fetchOnlineUser($this->token);
-        return $User;
-    }
-
-    /**
-     * Returns a string representing a JSon-object constructed from the AuthTokenObject's fields.
-     * @return string representing a JSon-object constructed from the AuthTokenObject's fields.
-     * @author Nikolaj Kæmpe.
-     */
-    public function toJson(){
-        return json_encode(get_object_vars($this));
-    }
-
-    /**
      * Uses the Validation class to verify the 'token' field.
      * If invalid false is returned. Otherwise true is returned.
      * @return bool representing whether the object is valid or not.
      * @author Nikolaj Kæmpe.
      */
-    private function isObjectValid()
+    private function failOnInvalidModel()
     {
         $validation = new Validation();
 
         if (!$validation->isValidToken($this->token)) {
-            $isValid =  false;
-        }else{
-            $isValid = true;
+            ResponseService::ResponsenotAuthorized();
         }
-        return $isValid;
     }
 
-    /*
-        Method checks if a token is valid
-    */
-    public function isValidToken(){
-
-        /*
-            Token is valis if:
-                -> it has correct format
-                -> in DB with have a user associated with the given token
-        */
-        
-        // @TODO uncomment below lines for production
-        // $isValidFormat = $this->isObjectValid();
-        // $isExistingTOken = $this->fetchUser();
-        // $isValidToken = ($isValidFormat && !empty($this->fetchUser()));
-        
-        
-        //@TODO the below line is only for development
-        $isValidToken = true;
-
-        return $isValidToken;
+    public function toJson(){
+        return json_encode(get_object_vars($this));
     }
-
 }

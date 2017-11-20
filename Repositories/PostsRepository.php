@@ -1,8 +1,8 @@
 <?php
 
 include_once('DatabaseConnection.php');
-include_once('./../Entities/PostModel.php');
-include_once('./../Services/SanitizeService.php');
+include_once('/../Entities/PostModel.php');
+include_once('/../Services/SanitizeService.php');
 
 class PostsRepository{
 
@@ -75,7 +75,7 @@ class PostsRepository{
     //--------------------------------------------------------------------------
     public function createPost($authtoken, $title, $content){
 
-        $newPostId;
+        $newPostId = 0;
 
         try{
             $connection = $this->getDatabaseConnection();

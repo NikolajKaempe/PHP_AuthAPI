@@ -8,201 +8,95 @@
 
 include_once('DatabaseConnection.php');
 
+/**
+ * Class AuthProcedures contains methods for all stored procedures
+ * used for User authentication and login.
+ */
 class AuthProcedures{
 
-    public function isUserBanned($username, $ipAddress){
-
-        try{
-            $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("CALL websecurity.is_user_banned(:username,:ipaddress,@result)");
-            $stmt->bindParam('username', $username, PDO::PARAM_STR );
-            $stmt->bindParam('ipaddress', $ipAddress, PDO::PARAM_STR);
-            $stmt->execute();
-            $stmt->closeCursor();
-
-            $result = $connection->query("select @result")->fetch(PDO::FETCH_ASSOC);
-
-            if(!empty($result)){
-                foreach (@$result as $row){
-                    ($row === '0')? $isBanned = false: $isBanned = true;
-                }
-            }else{
-                $isBanned = true;
-            }
-        }
-        catch (PDOException $e){
-            $isBanned = true;
-        }
-        catch (Exception $e){
-            $isBanned = true;
-        }
-
-        return $isBanned;
-    }
-
-    public function doUserExists($username){
-
-        try{
-            $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("Select websecurity.do_user_exist(?) as result");
-            $stmt->bindParam(1, $username, PDO::PARAM_STR,28);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if(!empty($result)){
-                foreach (@$result as $row){
-                    ($row === '1')? $exists = true: $exists = false;
-                }
-            }else{
-                $exists = false;
-            }
-        } catch (PDOException $e){
-            $exists = true;
-        }catch (Exception $e){
-            $exists = false;
-        }
-        return $exists;
-    }
-
-    public function fetchDatabaseUser($username){
-        $user = new ApplicationUser();
+    /**
+     * This method fetches the hashedPassword and salt for a specific user.
+     * If no user is found, an empty user is returned.
+     * @param $username, a string representing the username supplied by the user.
+     * @return User, containing the hashedPassword and salt for the requested User.
+     */
+    public function fetchSalt($username){
+        $salt = "dummy";
 
         try{
             $connection = DatabaseConnection::getConnection();
-            $stmt = $connection->prepare("call websecurity.fetch_user(:username,@password, @salt)");
+            $stmt = $connection->prepare("call security.auth_fetch_salt(:username, @salt)");
 
             $stmt->bindParam(":username", $username);
             $stmt->execute();
             $stmt->closeCursor();
 
-            $result = $connection->query("Select @password, @salt")->fetchAll(PDO::FETCH_ASSOC);
+            $result = $connection->query("Select @salt")->fetchAll(PDO::FETCH_ASSOC);
 
             if(!empty($result)){
                 foreach ($result as $row){
 
-                    $user->constructPasswordUser($row['@password'],$row['@salt']);
+                    $salt = $row['@salt'];
                 }
             }
 
         }catch (Exception $e){
-            $user = new ApplicationUser();
+            $salt = "dummy";
         }
-        return $user;
+        return $salt;
     }
 
-    public function fetchOnlineUser($token){
-        $user = new ResponseUser();
-
-        try{
-            $connection = DatabaseConnection::getConnection();
-            $stmt = $connection->prepare("call websecurity.fetch_online_user(:token,@username, @role)");
-
-            $stmt->bindParam(":token", $token);
-            $stmt->execute();
-            $stmt->closeCursor();
-
-            $result = $connection->query("Select @username, @role")->fetchAll(PDO::FETCH_ASSOC);
-
-            if(!empty($result)){
-                foreach ($result as $row){
-
-                    $user->construct($row['@username'],$row['@role']);
-                }
-            }
-
-        }catch (Exception $e){
-            $user = new ResponseUser();
-        }
-        return $user;
-    }
-
-    public function loginUser($username,$ipAddress){
-        $authToken = new AuthToken();
+    public function loginUser($username,$ipAddress,$hashedPassword){
 
         try{
             $connection = $this->getDatabaseConnection();
 
-            $stmt = $connection->prepare("CALL websecurity.login_user(:username,:ipAddress,@token,@timeAlive)");
+            $stmt = $connection->prepare("CALL security.auth_login_user(:username,:ip_address, :hashed_password,@token,@timeAlive)");
             $stmt->bindParam('username', $username, PDO::PARAM_STR );
-            $stmt->bindParam('ipAddress', $ipAddress, PDO::PARAM_STR);
+            $stmt->bindParam('ip_address', $ipAddress, PDO::PARAM_STR);
+            $stmt->bindParam('hashed_password', $hashedPassword, PDO::PARAM_STR);
             $stmt->execute();
-            $stmt->closeCursor();
 
+            $stmt->closeCursor();
             $result = $connection->query("Select @token, @timeAlive")->fetchAll(PDO::FETCH_ASSOC);
 
             if(!empty($result)){
                 foreach (@$result as $row){
+                    $authToken = new AuthToken($row['@token']);
                     $authToken->construct($row['@token'],$row['@timeAlive']);
                 }
+            }else{
+                ResponseService::ResponsenotAuthorized();
             }
-
         }
         catch (PDOException $e){
-            $authToken = new AuthToken();
+            ResponseService::ResponseBadRequest($e->errorInfo[2]);
         }
         catch (Exception $e){
-            $authToken = new AuthToken();
+            ResponseService::ResponseInternalError();
         }
-
-
         return $authToken;
     }
 
     public function createUser($username, $hashedPassword, $salt){
         try{
+
             $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("Call websecurity.create_user(:username, :hashedPassword, :salt)");
+            $stmt = $connection->prepare("Call security.auth_create_user(:username, :hashed_password, :salt)");
             $stmt->bindParam('username', $username);
-            $stmt->bindParam('hashedPassword', $hashedPassword);
+            $stmt->bindParam('hashed_password', $hashedPassword);
             $stmt->bindParam('salt', $salt);
             $stmt->execute();
-
-            if ($stmt->errorCode() == 45000){
-                throw new Exception($stmt->errorInfo()[2]);
-            }elseif ($stmt->errorCode() == 23000){
-                throw new Exception('Username already in use');
+        }
+        catch (PDOException $e){
+            if ($e->getCode() == 23000){
+                ResponseService::ResponseBadRequest("Username already in use");
+            }else{
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }
-        }
-        catch (PDOException $e){
-            throw new Exception("Internal Server Error");
+
         }catch (Exception $e){
-            throw $e;
-        }
-    }
-
-    public function addFailedLoginAttempt($username,$ipAddress){
-
-        try{
-            $connection = $this->getDatabaseConnection();
-
-            $stmt = $connection->prepare("Call websecurity.add_failed_login_attempt(:username,:ipAddress)");
-            $stmt->bindParam('username', $username, PDO::PARAM_STR );
-            $stmt->bindParam('ipAddress', $ipAddress, PDO::PARAM_STR);
-            $stmt->execute();
-        }
-        catch (PDOException $e){
-            throw new Exception("Internal Server Error");
-        }
-        catch (Exception $e){
-            throw new Exception("Internal Server Error");
-        }
-    }
-
-    public function removeFailedLoginAttempt($username,$ipAddress){
-
-        try{
-            $connection = $this->getDatabaseConnection();
-
-            $stmt = $connection->prepare("CALL websecurity.remove_failed_login_attempts(:username,:ipAddress)");
-            $stmt->bindParam('username', $username, PDO::PARAM_STR );
-            $stmt->bindParam('ipAddress', $ipAddress, PDO::PARAM_STR);
-            $stmt->execute();
-        }
-        catch (PDOException $e){
-            throw new Exception("Internal Server Error");
-        }
-        catch (Exception $e){
-            throw new Exception("Internal Server Error");
+            ResponseService::ResponseInternalError();
         }
     }
 

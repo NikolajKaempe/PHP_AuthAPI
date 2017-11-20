@@ -14,7 +14,10 @@ class DatabaseConnection{
 
         if (!isset(static::$db)) {
             // TODO CHANGE TO AN APPROPRIATE DB-USER AND NOT ROOT!!
+            //static::$db = new PDO('mysql:host:80.255.6.114',"test","iHateDoingLongPasswords");
+
             static::$db = new PDO('mysql:host:localhost',"root","");
+            static::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         return static::$db;
     }

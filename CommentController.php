@@ -1,10 +1,10 @@
 <?php
 
-include_once('./Services/RequestService.php');
-include_once('./Services/ResponseService.php');
-include_once('./Services/SanitizeService.php');
-include_once('./Entities/CommentModel.php');
-include_once('./Repositories/CommentsRepository.php');
+include_once('Services/RequestService.php');
+include_once('Services/ResponseService.php');
+include_once('Services/SanitizeService.php');
+include_once('Entities/CommentModel.php');
+include_once('Repositories/CommentsRepository.php');
 
 $requestHttpMethod = $_SERVER['REQUEST_METHOD'];
 $input = file_get_contents('php://input');

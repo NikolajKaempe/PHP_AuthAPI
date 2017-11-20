@@ -27,10 +27,7 @@ class Validation{
      * @author Nikolaj Kæmpe.
      */
     public function hashPassword($password, $salt){
-        $cost = [
-            'cost' => 6
-        ];
-        return password_hash($password.$salt.$this->pepper, PASSWORD_BCRYPT, $cost);
+        return hash("SHA256",md5($password.$salt.$this->pepper));
     }
 
     /**
@@ -57,8 +54,8 @@ class Validation{
      */
     public  function isValidUsername($username){
         return ($this->isStringLengthBetween(4,32,$username) &&
-                $this->containsLettersAndNumbersOnly($username)
-                );
+            $this->containsLettersAndNumbersOnly($username)
+        );
     }
 
     /**
@@ -99,7 +96,7 @@ class Validation{
 
     /**
      * Verifies that the input parameter is between 7-20 characters.
-     * @param $ipAddress, a string representing the IPAddress of the HTTP-request
+     * @param $ipAddress, a string representing the IPAddress of the HTTP-request.
      * @return bool, representing whether the supplied IP address is valid or not.
      * @author Nikolaj Kæmpe.
      */
@@ -167,43 +164,4 @@ class Validation{
     public function containsLowerCase($input){
         return preg_match('/[a-z]+/',$input)? true : false;
     }
-
-
-    /*
-        CHECKS IF OBJECT HAS
-            specific property and it is not empty
-    */
-    public function notNullValidation($object, $propertyName){
-        
-        $propertyExists = !property_exists($object, $propertyName);
-        $propertyHasValue = empty($object->{"$propertyName"});
-        
-        if($propertyExists && $propertyHasValue){ 
-            return false;
-        }
-        
-        return true;
-    }
-
-
-    //------------------------------------------------------------
-    /*
-        CHECKS IF OBJECT HAS
-            the specified properties AND
-            properties are not empty
-    */
-    public function hasAllProperties($object, $propertiesToCheck){
-        
-        $isValid = false;
-
-        foreach ($propertiesToCheck as $property) {
-            $isValid = $this->notNullValidation($object, $property);
-            if(!$isValid){
-                break;
-            }
-        }
-        
-        return $isValid;
-    }
-    
 }

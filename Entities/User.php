@@ -7,15 +7,15 @@
  */
 
 include_once('/../Repositories/AuthProcedures.php');
+include_once('/../Services/ResponseService.php');
 include_once('/../Logic/Validation.php');
-include_once('ResponseUser.php');
 
 /**
- * Class ApplicationUser
+ * Class User
  * The user instance with Authentication functionality.
  * @author Nikolaj Kæmpe
  */
-class ApplicationUser{
+class User{
 
     /**
      * @var string, the requested username.
@@ -42,7 +42,7 @@ class ApplicationUser{
     private $salt;
 
     /**
-     * The primary constructor of the ApplicationUser.
+     * The primary constructor of the User.
      * If the Object is not valid after parsing the input an error is returned.
      * Only the 'username' and 'password' will be used, the other fields will be set internally by other methods.
      * @param $json, is a Map, typically the body of a HTTP request.
@@ -54,23 +54,7 @@ class ApplicationUser{
         $data = json_decode($json, true);
         if (empty($data)) throw new Exception("Object Not Valid");
         foreach ($data AS $key => $value) $this->{$key} = $value;
-        if (!$this->isValidAppUser()) throw new Exception("Object Not Valid");
-    }
-
-    /**
-     * This constructor should be used to create a UserObject
-     * with only the hashedPassword and Salt.
-     * This Object is used to verify that a password sent by a user,
-     * matches the hashedPassword saved on the database, when the pepper and saved salt is added.
-     * @param $hashedPassword, is a string representing the HashedPassword saved on the database.
-     * @param $salt, is a string representing the Salt saved on the database.
-     * @throws Exception if the object is not valid after parsing the input parameters.
-     * @author Nikolaj Kæmpe.
-     */
-    public function constructPasswordUser($hashedPassword,$salt){
-        $this->hashedPassword = $hashedPassword;
-        $this->salt = $salt;
-        if (!$this->isValidPswUser()) throw new Exception("Object Not Valid");
+        $this->failOnInvalidModel();
     }
 
     /**
@@ -119,23 +103,18 @@ class ApplicationUser{
      * @author Nikolaj Kæmpe.
      */
     public function createUser($ip){
-        if (!$this->isValidAppUser()) throw new Exception("Object Not Valid");
-        $procedures = new AuthProcedures();
-        $validation = new Validation();
+        $this->failOnInvalidModel();
 
+        $validation = new Validation();
         if (!$validation->isValidIP($ip)){
-            throw new Exception("Invalid IP-Address");
+            ResponseService::ResponseBadRequest("Invalid IP-Address");
         }
 
         $this->saltAndHashPassword();
-        try{
-            $procedures->createUser($this->username,$this->hashedPassword,$this->salt);
-        }
-        catch (Exception $e){
-            throw $e;
-        }
-
+        $procedures = new AuthProcedures();
+        $procedures->createUser($this->username,$this->hashedPassword,$this->salt);
         $token = $this->tryLogin($ip);
+
         return $token;
     }
 
@@ -155,36 +134,19 @@ class ApplicationUser{
      * @author Nikolaj Kæmpe.
      */
     public function tryLogin($ipAddress){
-        if (!$this->isValidAppUser()) throw new Exception("Object Not Valid");
+        $this->failOnInvalidModel();
+
         $procedures = new AuthProcedures();
         $validation = new Validation();
 
-        try{
-
-            if (!$validation->isValidIP($ipAddress)){
-                throw new Exception("Invalid IP-Address");
-            }
-
-            if ($procedures->isUserBanned($this->username,$ipAddress) == true){
-                throw new Exception("User ".$this->username." is currently banned.");
-            }
-            if ($procedures->doUserExists($this->username) == false) {
-                $procedures->addFailedLoginAttempt($this->username,$ipAddress);
-                throw new Exception("Incorrect username or password");
-            }
-
-            $databaseUser = $procedures->fetchDatabaseUser($this->username);
-
-            if ($validation->comparePassword($this->password,$databaseUser->hashedPassword,$databaseUser->salt) === false){
-                $procedures->addFailedLoginAttempt($this->username,$ipAddress);
-                throw new Exception("Incorrect username or password");
-            }else{
-                $procedures->removeFailedLoginAttempt($this->username,$ipAddress);
-                $token = $procedures->loginUser($this->username,$ipAddress);
-            }
-        }catch (Exception $e){
-            throw $e;
+        if (!$validation->isValidIP($ipAddress)){
+            ResponseService::ResponseBadRequest("Invalid IP-Address");
         }
+
+        $this->salt = $procedures->fetchSalt($this->username);
+        $this->hashedPassword = $validation->hashPassword($this->password,$this->salt);
+        $token = $procedures->loginUser($this->username,$ipAddress,$this->hashedPassword);
+
         return $token;
     }
 
@@ -204,34 +166,13 @@ class ApplicationUser{
      * @return bool representing whether the object is valid or not.
      * @author Nikolaj Kæmpe.
      */
-    private function isValidAppUser(){
+    private function failOnInvalidModel(){
         $validation = new Validation();
 
         if (!$validation->isValidUsername($this->username)
             || !$validation->isValidPassword($this->password) ) {
-            $isValid =  false;
-        }else{
-            $isValid = true;
+            ResponseService::ResponseBadRequest("Invalid Request-Body");
         }
-
-        return $isValid;
-    }
-
-    /**
-     * Uses the Validation class to verify the 'hashedPassword' & 'salt' fields.
-     * If either of them is invalid, false is returned. Otherwise true is returned.
-     * @return bool representing whether the object is valid or not.
-     * @author Nikolaj Kæmpe.
-     */
-    private function isValidPswUser(){
-        $validation = new Validation();
-        if (!$validation->isValidHashedPassword($this->hashedPassword)
-            || !$validation->isValidSalt($this->salt) ) {
-            $isValid =  false;
-        }else{
-            $isValid = true;
-        }
-        return $isValid;
     }
 
 }
