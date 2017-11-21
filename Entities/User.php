@@ -6,9 +6,9 @@
  * Time: 12:42
  */
 
-include_once('/../Repositories/AuthProcedures.php');
-include_once('/../Services/ResponseService.php');
-include_once('/../Logic/Validation.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/AuthProcedures.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Logic/Validation.php');
 
 /**
  * Class User
@@ -52,8 +52,9 @@ class User{
     public function constructFromHashMap($json)
     {
         $data = json_decode($json, true);
-        if (empty($data)) throw new Exception("Object Not Valid");
+        if (empty($data)) ResponseService::ResponseBadRequest("Invalid Request-Body");
         foreach ($data AS $key => $value) $this->{$key} = $value;
+
         $this->failOnInvalidModel();
     }
 

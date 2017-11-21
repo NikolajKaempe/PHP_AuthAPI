@@ -13,11 +13,18 @@
  */
 class Validation{
 
+
     /**
      * @var string, a static value used when hashing password for each user.
      * @author Nikolaj Kæmpe.
      */
     private $pepper = "IfSaltIsNotEnough,MakeSureToUseSomePepperAsWell!!";
+
+
+    public function __construct()
+    {
+
+    }
 
     /**
      * This method is used to hash a password, with a unique salt and the static pepper, using BCrypt

@@ -6,8 +6,8 @@
  * Time: 12:33
  */
 
-include_once('/../Logic/Validation.php');
-include_once('/../Services/ResponseService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Logic/Validation.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
 
 
 /**
@@ -83,7 +83,7 @@ class AuthToken{
         $validation = new Validation();
 
         if (!$validation->isValidToken($this->token)) {
-            ResponseService::ResponsenotAuthorized();
+            ResponseService::ResponseNotAuthorized();
         }
     }
 

@@ -51,7 +51,7 @@ class ResponseService
     }
 
     // Responds with 401 status and message
-    public static function ResponsenotAuthorized($msg = "Access Denied")
+    public static function ResponseNotAuthorized($msg = "Access Denied")
     {
         header("HTTP/1.1 401");
         header('Content-Type: application/json');
@@ -79,7 +79,7 @@ class ResponseService
     }
 
     // Responds with 500 status and message
-    public static function ResponseInternalError($msg = "undefined")
+    public static function ResponseInternalError($msg = "Internal Server Error")
     {
         header("HTTP/1.1 500");
         header('Content-Type: application/json');

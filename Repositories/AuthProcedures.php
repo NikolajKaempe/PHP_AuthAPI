@@ -6,7 +6,7 @@
  * Time: 23:39
  */
 
-include_once('DatabaseConnection.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/DatabaseConnection.php');
 
 /**
  * Class AuthProcedures contains methods for all stored procedures
@@ -66,7 +66,7 @@ class AuthProcedures{
                     $authToken->construct($row['@token'],$row['@timeAlive']);
                 }
             }else{
-                ResponseService::ResponsenotAuthorized();
+                ResponseService::ResponseNotAuthorized();
             }
         }
         catch (PDOException $e){
@@ -80,7 +80,6 @@ class AuthProcedures{
 
     public function createUser($username, $hashedPassword, $salt){
         try{
-
             $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("Call security.auth_create_user(:username, :hashed_password, :salt)");
             $stmt->bindParam('username', $username);

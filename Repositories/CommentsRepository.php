@@ -1,7 +1,7 @@
 <?php
 
-include_once('DatabaseConnection.php');
-include_once('/../Services/SanitizeService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/DatabaseConnection.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
 
 class CommentsRepository{
 
@@ -10,16 +10,20 @@ class CommentsRepository{
 
         try{
             $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("CALL websecurity.comment_get_from_post(:authtoken, :post_id, :amount, :offset ,@result)");
+            $stmt = $connection->prepare("CALL security.comment_get_from_post(:authtoken, :post_id, :amount, :offset");// ,@result)");
             $stmt->bindParam("authtoken", $token, PDO::PARAM_STR );
             $stmt->bindParam('post_id', $post_id, PDO::PARAM_INT);
             $stmt->bindParam('amount', $amount, PDO::PARAM_INT);
             $stmt->bindParam('offset', $offset, PDO::PARAM_INT);
+
+            $result = $stmt->execute();
+
+            /*
             $stmt->execute();
             $stmt->closeCursor();
 
             $result = $connection->query("select @result")->fetch(PDO::FETCH_ASSOC);
-
+            */
             if(!empty($result)){
                 foreach (@$result as $row){
                     array_push(
@@ -36,10 +40,10 @@ class CommentsRepository{
             }
         }
         catch (PDOException $e){
-           // @TODO WHAT SHOUL HAPPEN HERE ?
+            ResponseService::ResponseBadRequest($e->errorInfo[2]);
         }
         catch (Exception $e){
-           // @TODO WHAT SHOUL HAPPEN HERE ?
+            ResponseService::ResponseInternalError();
         }
 
         return $commentsArray;
@@ -52,26 +56,27 @@ class CommentsRepository{
 
         try{
             $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("CALL websecurity.comment_create(:authtoken ,:post_id, :content ,@comment_id)");
+            $stmt = $connection->prepare("CALL security.comment_create(:authtoken ,:post_id, :content");// ,@comment_id)");
             $stmt->bindParam('authtoken', $token, PDO::PARAM_STR );
             $stmt->bindParam('post_id', $post_id, PDO::PARAM_INT);
             $stmt->bindParam('content', $content, PDO::PARAM_STR);
+            $result = $stmt->execute();
+
+            /*
             $stmt->execute();
             $stmt->closeCursor();
 
             $result = $connection->query("select @comment_id")->fetch(PDO::FETCH_ASSOC);
-
-            //@TODO - if post is not create ?????
-
+            */
             if(!empty($result)){
-               $newCommentId = $result["@comment_id"];
+               $newCommentId = $result["@id"];
             }
         }
         catch (PDOException $e){
-           // @TODO WHAT SHOUL HAPPEN HERE ?
+            ResponseService::ResponseBadRequest($e->errorInfo[2]);
         }
         catch (Exception $e){
-           // @TODO WHAT SHOUL HAPPEN HERE ?
+            ResponseService::ResponseInternalError();
         }
 
         return  $newCommentId;

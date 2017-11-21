@@ -1,10 +1,10 @@
 <?php
 
-include_once('Services/RequestService.php');
-include_once('Services/ResponseService.php');
-include_once('Services/SanitizeService.php');
-include_once('Repositories/PostsRepository.php');
-include_once('Entities/PostModel.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/RequestService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/PostsRepository.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/PostModel.php');
 
 $requestHttpMethod = $_SERVER['REQUEST_METHOD'];
 $input = file_get_contents('php://input');

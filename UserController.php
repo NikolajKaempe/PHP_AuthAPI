@@ -6,11 +6,10 @@
  * Time: 12:33
  */
 
-include_once('Entities/AuthToken.php');
-include_once('Entities/User.php');
-include_once('Services/RequestService.php');
-include_once('Services/ResponseService.php');
-
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/AuthToken.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/User.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/RequestService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = $_SERVER['PATH_INFO'];
@@ -36,6 +35,7 @@ switch ($request){
 }
 
 function register($input,$ip){
+
     $User = new User();
     $User->constructFromHashMap($input);
     $authToken = $User->createUser($ip);

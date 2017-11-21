@@ -1,8 +1,8 @@
 <?php
 
 
-include_once('ResponseService.php');
-include_once('/../Entities/AuthToken.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/AuthToken.php');
 
 class RequestService
 {
@@ -15,7 +15,7 @@ class RequestService
 
         // IF NO Authorization HEADER -> response NOT AUTHORIZED
         if(!isset($headers['Authorization'])){
-             ResponseService::ResponsenotAuthorized("No Authorization Header");
+             ResponseService::ResponseNotAuthorized("No Authorization Header");
         } 
 
         // CHECK IF Authorization HEADER contains Token
@@ -118,7 +118,7 @@ class RequestService
 
         // If auth Header contains NO TOKEN
         if( strpos( $authHeaderValue, "Token=" ) === false ) {
-            ResponseService::ResponsenotAuthorized("Token is missing");
+            ResponseService::ResponseNotAuthorized("Token is missing");
         }
         
         $token = RequestService::GetToken();
