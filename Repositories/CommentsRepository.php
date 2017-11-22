@@ -1,41 +1,38 @@
 <?php
 
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/DatabaseConnection.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
 
 class CommentsRepository{
 
     public function getCommentsOfPost($token, $post_id, $amount, $offset){
-        $commentsArray = array();
-
+        $commentsArray = [];
         try{
             $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("CALL security.comment_get_from_post(:authtoken, :post_id, :amount, :offset");// ,@result)");
-            $stmt->bindParam("authtoken", $token, PDO::PARAM_STR );
+            $stmt = $connection->prepare("CALL security.comment_get_from_post(:auth_token, :post_id, :amount, :offset)");
+            $stmt->bindParam("auth_token", $token, PDO::PARAM_STR );
             $stmt->bindParam('post_id', $post_id, PDO::PARAM_INT);
             $stmt->bindParam('amount', $amount, PDO::PARAM_INT);
             $stmt->bindParam('offset', $offset, PDO::PARAM_INT);
-
-            $result = $stmt->execute();
-
-            /*
             $stmt->execute();
-            $stmt->closeCursor();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $result = $connection->query("select @result")->fetch(PDO::FETCH_ASSOC);
-            */
             if(!empty($result)){
                 foreach (@$result as $row){
-                    array_push(
-                        $commentsArray, 
-                        new Comment(
-                            $row['id'], 
-                            $row['user_id'], 
-                            $row['post_id'], 
-                            SanitizeService::SanitizeString($row['content']), 
-                            $row['created_timestamp']
-                        )
+
+                    $comment = new Comment_v2();
+                    $comment->construct(
+                        $row['id'],
+                        $row['user_id'],
+                        'Dummy Username',
+                        $row['post_id'],
+                        SanitizeService::SanitizeString($row['content']),
+                        $row['created_timestamp'],
+                        $row['updated_timestamp'],
+                        $row['deleted_timestamp']
                     );
+                    array_push($commentsArray,$comment);
                 }
             }
         }
@@ -56,41 +53,39 @@ class CommentsRepository{
     //---------------------------------------------------------------------
 
     public function createComment($token, $post_id, $content){
-        $newCommentId = 0;
+        $id = 0;
 
-        var_dump($token,$post_id,$content);
         try{
             $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("CALL security.comment_create(:authtoken ,:post_id, :content");// ,@comment_id)");
-            $stmt->bindParam('authtoken', $token, PDO::PARAM_STR );
+            $stmt = $connection->prepare("CALL security.comment_create(:auth_token,:post_id, :content)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
             $stmt->bindParam('post_id', $post_id, PDO::PARAM_INT);
             $stmt->bindParam('content', $content, PDO::PARAM_STR);
-            $result = $stmt->execute();
-
-            /*
             $stmt->execute();
-            $stmt->closeCursor();
-
-            $result = $connection->query("select @comment_id")->fetch(PDO::FETCH_ASSOC);
-            */
-            if(!empty($result)){
-               $newCommentId = $result["@id"];
-            }
+            $id = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         catch (PDOException $e){
+            var_dump($e->getMessage());
+
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }elseif ($e->getCode() == 23000) {
+                ResponseService::ResponseBadRequest("Invalid Post");
             }else{
                 ResponseService::ResponseInternalError();
             }
         }
         catch (Exception $e){
+            var_dump($e->getMessage());
             ResponseService::ResponseInternalError();
         }
 
-        return  $newCommentId;
+        return  $id;
     }
 
+    private function getDatabaseConnection(){
+        return DatabaseConnection::getConnection();
+    }
     //---------------------------------------------------------------------
     //---------------------------------------------------------------------
     //---------------------------------------------------------------------

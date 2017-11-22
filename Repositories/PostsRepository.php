@@ -1,9 +1,10 @@
 <?php
 
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/DatabaseConnection.php');
-include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/Post_v2.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/Post_v2.php');
+
 
 
 class PostsRepository{
@@ -83,7 +84,7 @@ class PostsRepository{
         $id = 0;
         try{
             $connection = $this->getDatabaseConnection();
-            $stmt = $connection->prepare("CALL security.post_create(:auth_token ,:title, :content)");// ,@post_id)");
+            $stmt = $connection->prepare("CALL security.post_create(:auth_token ,:title, :content)");
             $stmt->bindParam('auth_token', $authToken, PDO::PARAM_STR );
             $stmt->bindParam('title', $title, PDO::PARAM_STR);
             $stmt->bindParam('content', $content, PDO::PARAM_STR);
@@ -93,8 +94,6 @@ class PostsRepository{
         catch (PDOException $e){
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
-            }elseif ($e->getCode() == 23000){
-                ResponseService::ResponseBadRequest("Post already exists");
             }
             else{
                 ResponseService::ResponseInternalError();
@@ -121,14 +120,16 @@ function makePostsFromResultSet($result){
      foreach (@$result as $row){
 
          $post = new Post_v2();
-         $post->construct($row['id'],
+         $post->construct(
+             $row['id'],
              $row['user_id'],
              'Dummy Username',
              SanitizeService::SanitizeString($row['title']),
              SanitizeService::SanitizeString($row['content']),
              $row['created_timestamp'],
              $row['updated_timestamp'],
-             $row['deleted_timestamp']);
+             $row['deleted_timestamp']
+         );
          array_push($postsArray,$post);
     }
 

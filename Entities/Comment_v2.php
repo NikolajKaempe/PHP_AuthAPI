@@ -3,22 +3,21 @@
  * Created by PhpStorm.
  * User: Kaempe
  * Date: 22-11-2017
- * Time: 13:38
+ * Time: 22:02
  */
 
-include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/PostsRepository.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/CommentsRepository.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Logic/Validation.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
 
-/**
- * Class Post_v2 My version of the Post Class, including functionality
- */
-class Post_v2{
+
+class Comment_v2{
 
     private $id;
     private $user_id;
     private $username;
-    private $title;
+    private $post_id;
     private $content;
     private $createdAt;
     private $updatedAt;
@@ -31,65 +30,51 @@ class Post_v2{
         $this->failOnInvalidModel();
     }
 
-    public function construct($id, $userId, $username, $title, $content,
-                              $createdAt, $updatedAt, $deletedAt){
+    public function construct($id, $userId, $username, $postId, $content, $createdAt, $updatedAt, $deletedAt){
         $this->id = $id;
         $this->user_id = $userId;
         $this->username = $username;
-        $this->title = $title;
+        $this->post_id = $postId;
         $this->content = $content;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->deletedAt = $deletedAt;
     }
-
-    public function createPost($token){
+    public function createComment($token){
         $this->failOnInvalidModel();
         $validation = new Validation();
-        $procedures = new PostsRepository();
-        $this->title = SanitizeService::SanitizeString($this->title);
+        $procedures = new CommentsRepository();
         $this->content = SanitizeService::SanitizeString($this->content);
         if (!$validation->isValidToken($token)) ResponseService::ResponseBadRequest("Invalid Request-Body");
-        $this->id = $procedures->createPost($token,$this->title,$this->content);
+
+        $this->id = $procedures->createComment($token,$this->post_id,$this->content);
+
     }
 
-    public function getRecent($token,$amount,$offset){
+    public function getCommentsFromPost($token, $post_id, $amount, $offset){
         $validation = new Validation();
-        $procedures = new PostsRepository();
+        $procedures = new CommentsRepository();
 
         if (!$validation->isValidToken($token) ||
-        !is_numeric($amount) ||
-        !is_numeric($offset)) {
-            ResponseService::ResponseBadRequest("Invalid Request-Body");
-        }
-
-        return $procedures->getPosts($token,$amount,$offset);
-    }
-
-    public function getFromUser($token,$userId,$amount,$offset){
-        $validation = new Validation();
-        $procedures = new PostsRepository();
-        if (!$validation->isValidToken($token) ||
-            !is_numeric($userId) ||
+            !is_numeric($post_id) ||
             !is_numeric($amount) ||
             !is_numeric($offset)){
             ResponseService::ResponseBadRequest("Invalid Request-Body");
         }
-        return $procedures->getPostsByUser($token,$userId,$amount,$offset);
+        return $procedures->getCommentsOfPost($token, $post_id, $amount, $offset);
     }
 
-    public function arrayToJson($posts){
+    public function arrayToJson($comments){
         $result = "[";
-        if (!empty($posts)){
-            foreach ($posts as $post){
-                $result .= json_encode(get_object_vars($post)).', ';
+        if (!empty($comments) ){
+            foreach ($comments as $comment){
+                $result .= json_encode(get_object_vars($comment)).', ';
             }
             $result = substr($result,0,strlen($result)-2);
         }
         $result .= "]";
         return $result;
     }
-
 
     public function idToJson(){
         return json_encode($this->id);
@@ -98,10 +83,11 @@ class Post_v2{
     private function failOnInvalidModel(){
         $validation = new Validation();
 
-        if (!$validation->isValidTitle($this->title) ||
-            !$validation->isValidContent($this->content)){
+        if (!$validation->isValidContent($this->content)||
+            !is_numeric($this->post_id)){
             ResponseService::ResponseBadRequest("Invalid Request-Body");
         }
-     }
+    }
+
 
 }
