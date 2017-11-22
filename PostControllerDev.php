@@ -36,7 +36,7 @@ RequestService::enableCORS();
 */
 //------------------------------------------------------------------------------
 
-RequestService::TokenCheck();
+//RequestService::TokenCheck();
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ RequestService::TokenCheck();
 */
 
 // Get token value from REQUEST
-$token = RequestService::GetToken();
+//$token = RequestService::GetToken();
 
 // CREATE PostsRepository
 $postRepository = new PostsRepository();

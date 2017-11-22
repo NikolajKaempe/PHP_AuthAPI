@@ -96,7 +96,6 @@ class Validation{
      * @author Nikolaj Kæmpe.
      */
     public function isValidSalt($salt){
-
         return ($this->isStringLengthBetween(12,13,$salt));
         // TODO ADD ADDITIONAL CHECKS?
     }
@@ -109,7 +108,6 @@ class Validation{
      */
     public function isValidIP($ipAddress){
         return true;
-
         //return ($this->isStringLengthBetween(7,20,$ipAddress));
         // TODO ADD ADDITIONAL CHECKS?
     }
@@ -123,6 +121,15 @@ class Validation{
     public function isValidToken($token){
         return ($this->isStringLengthBetween(127,128,$token));
         // TODO ADD ADDITIONAL CHECKS?
+    }
+
+    public function isValidTitle($title){
+
+        return (!empty($title));
+    }
+
+    public function isValidContent($content){
+        return (!empty($content));
     }
 
     /**

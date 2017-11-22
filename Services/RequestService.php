@@ -15,7 +15,7 @@ class RequestService
 
         // IF NO Authorization HEADER -> response NOT AUTHORIZED
         if(!isset($headers['Authorization'])){
-             ResponseService::ResponseNotAuthorized("No Authorization Header");
+             ResponseService::ResponseNotAuthorized("Access Denied");
         } 
 
         // CHECK IF Authorization HEADER contains Token

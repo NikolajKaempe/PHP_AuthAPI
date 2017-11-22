@@ -7,6 +7,9 @@
  */
 
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/DatabaseConnection.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/AuthToken.php');
+
 
 /**
  * Class AuthProcedures contains methods for all stored procedures
@@ -70,7 +73,11 @@ class AuthProcedures{
             }
         }
         catch (PDOException $e){
-            ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }else{
+                ResponseService::ResponseInternalError();
+            }
         }
         catch (Exception $e){
             ResponseService::ResponseInternalError();
@@ -91,7 +98,7 @@ class AuthProcedures{
             if ($e->getCode() == 23000){
                 ResponseService::ResponseBadRequest("Username already in use");
             }else{
-                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+                ResponseService::ResponseInternalError();
             }
 
         }catch (Exception $e){

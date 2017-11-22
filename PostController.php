@@ -10,7 +10,7 @@ $requestHttpMethod = $_SERVER['REQUEST_METHOD'];
 $input = file_get_contents('php://input');
 
 $POSTS_DEFAULT_AMOUNT = 50;
-$POSTS_DEFAULT_OFFSET = 30;
+$POSTS_DEFAULT_OFFSET = 0;
 
 //------------------------------------------------------------------------------
 /*
@@ -50,13 +50,13 @@ switch ($requestHttpMethod){
     //--------------------------------------------------------------------------
     case 'GET':
 
-        RequestService::validateNumericUrlParam('user_id');
-        $user_id = $_GET['user_id']; 
+        $postsByUser = RequestService::isParamSet('user_id');
         $postsAmount = RequestService::isNumericUrlParamDefined('amount') ? $_GET['amount'] : $POSTS_DEFAULT_AMOUNT;
         $offset      = RequestService::isNumericUrlParamDefined('offset') ? $_GET['offset'] : $POSTS_DEFAULT_OFFSET;
 
         // RETURN POST BY SPECIFIC USER
         if($postsByUser){
+            $user_id = SanitizeService::SanitizeProperty($_GET['user_id']);
             $posts = $postRepository->getPostsByUser(
                 $token,
                 $user_id,
@@ -93,6 +93,7 @@ switch ($requestHttpMethod){
 
         // Check if RequestBody Contains required data
         $Validation  = new Validation();
+  /*
         $isValidData = $Validation->hasAllProperties(
             $jRequestBody, Post::getRequiredProperties()
         );
@@ -101,7 +102,7 @@ switch ($requestHttpMethod){
         if(!$isValidData){
             ResponseService::ResponseBadRequest("Bad Request");
         }
-
+*/
         // SANITIZE Post Properties
         $sanizedRequestBody = SanitizeService::SanitizeObjectsProperties(
             $jRequestBody, Post::getRequiredProperties());

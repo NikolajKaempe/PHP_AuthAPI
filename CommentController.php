@@ -76,22 +76,23 @@ switch ($requestHttpMethod){
 
     // Check if RequestBody Contains required data
     $Validation  = new Validation();
+/*
     $isValidData = $Validation->hasAllProperties(
         $jRequestBody, Comment::getRequiredProperties()
     );
-    
+
     // If RequestBody Doesn't contain required fields
     if(!$isValidData){
         ResponseService::ResponseBadRequest("Bad Request");
     }
-
+*/
     // SANITIZE Post Properties
     $sanizedRequestBody = SanitizeService::SanitizeObjectsProperties(
         $jRequestBody, Comment::getRequiredProperties());
-    
+
     $newCommentId = $commentsRepository->createComment(
         $token,
-        $sanizedRequestBody->$post_id, 
+        $sanizedRequestBody->$post_id,
         $sanizedRequestBody->$content
     );
 

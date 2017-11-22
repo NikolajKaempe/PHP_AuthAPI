@@ -40,7 +40,11 @@ class CommentsRepository{
             }
         }
         catch (PDOException $e){
-            ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }else{
+                ResponseService::ResponseInternalError();
+            }
         }
         catch (Exception $e){
             ResponseService::ResponseInternalError();
@@ -54,6 +58,7 @@ class CommentsRepository{
     public function createComment($token, $post_id, $content){
         $newCommentId = 0;
 
+        var_dump($token,$post_id,$content);
         try{
             $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("CALL security.comment_create(:authtoken ,:post_id, :content");// ,@comment_id)");
@@ -73,7 +78,11 @@ class CommentsRepository{
             }
         }
         catch (PDOException $e){
-            ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }else{
+                ResponseService::ResponseInternalError();
+            }
         }
         catch (Exception $e){
             ResponseService::ResponseInternalError();
