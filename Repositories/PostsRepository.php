@@ -13,8 +13,6 @@ class PostsRepository{
     //--------------------------------------------------------------------------
 
     public function getPosts($authToken, $amount, $offset){
-        var_dump($amount,$offset);
-
         $postsArray = array();
 
         try{
@@ -81,7 +79,7 @@ class PostsRepository{
     
     //--------------------------------------------------------------------------
     public function createPost($authToken, $title, $content){
-        $id = 0;
+        $post = new Post_v2();
         try{
             $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("CALL security.post_create(:auth_token ,:title, :content)");
@@ -89,7 +87,13 @@ class PostsRepository{
             $stmt->bindParam('title', $title, PDO::PARAM_STR);
             $stmt->bindParam('content', $content, PDO::PARAM_STR);
             $stmt->execute();
-            $id = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($result)){
+                foreach (@$result as $row){
+                    $post = makePostFromRow($row);
+                }
+            }
         }
         catch (PDOException $e){
             if ($e->getCode() == 45000) {
@@ -102,7 +106,7 @@ class PostsRepository{
         catch (Exception $e){
             ResponseService::ResponseInternalError();
         }
-        return $id;
+        return $post;
     }
 
     //--------------------------------------------------------------------------
@@ -118,20 +122,24 @@ function makePostsFromResultSet($result){
     $postsArray = [];
 
      foreach (@$result as $row){
-
-         $post = new Post_v2();
-         $post->construct(
-             $row['id'],
-             $row['user_id'],
-             'Dummy Username',
-             SanitizeService::SanitizeString($row['title']),
-             SanitizeService::SanitizeString($row['content']),
-             $row['created_timestamp'],
-             $row['updated_timestamp'],
-             $row['deleted_timestamp']
-         );
-         array_push($postsArray,$post);
+         array_push($postsArray,makePostFromRow($row));
     }
 
     return $postsArray;
+}
+
+function makePostFromRow($row){
+    $post = new Post_v2();
+
+    $post->construct(
+        $row['id'],
+        $row['user_id'],
+        $row['username'],
+        $row['title'],
+        $row['content'],
+        $row['created_timestamp'],
+        $row['updated_timestamp'],
+        $row['deleted_timestamp']
+    );
+    return $post;
 }

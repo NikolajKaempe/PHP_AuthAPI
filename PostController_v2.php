@@ -43,6 +43,7 @@ function getPosts($token,$defaultAmount,$defaultOffset){
     $postOffset = RequestService::isNumericUrlParamDefined('offset') ? $_GET['offset'] : $defaultOffset;
     $userId     = RequestService::isNumericUrlParamDefined('user_id')? $_GET['user_id'] : 0;
 
+
     $post = new Post_v2();
 
     if ( $userId === 0){
@@ -56,7 +57,7 @@ function getPosts($token,$defaultAmount,$defaultOffset){
 function createPost($input,$token){
     $post = new Post_v2();
     $post->constructFromHashMap($input);
-    $post->createPost($token); // TODO
-    ResponseService::ResponseJSON($post->idToJson());
+    $post = $post->createPost($token);
+    ResponseService::ResponseJSON($post->toJson());
 }
 

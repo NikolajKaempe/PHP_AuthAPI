@@ -47,7 +47,7 @@ class Comment_v2{
         $this->content = SanitizeService::SanitizeString($this->content);
         if (!$validation->isValidToken($token)) ResponseService::ResponseBadRequest("Invalid Request-Body");
 
-        $this->id = $procedures->createComment($token,$this->post_id,$this->content);
+        return $procedures->createComment($token,$this->post_id,$this->content);
 
     }
 
@@ -76,8 +76,8 @@ class Comment_v2{
         return $result;
     }
 
-    public function idToJson(){
-        return json_encode($this->id);
+    public function toJson(){
+        return json_encode(get_object_vars($this));
     }
 
     private function failOnInvalidModel(){

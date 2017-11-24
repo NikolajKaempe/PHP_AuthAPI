@@ -19,21 +19,7 @@ class CommentsRepository{
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if(!empty($result)){
-                foreach (@$result as $row){
-
-                    $comment = new Comment_v2();
-                    $comment->construct(
-                        $row['id'],
-                        $row['user_id'],
-                        'Dummy Username',
-                        $row['post_id'],
-                        SanitizeService::SanitizeString($row['content']),
-                        $row['created_timestamp'],
-                        $row['updated_timestamp'],
-                        $row['deleted_timestamp']
-                    );
-                    array_push($commentsArray,$comment);
-                }
+                $commentsArray = $this->makeCommentsFromResultSet($result);
             }
         }
         catch (PDOException $e){
@@ -53,8 +39,7 @@ class CommentsRepository{
     //---------------------------------------------------------------------
 
     public function createComment($token, $post_id, $content){
-        $id = 0;
-
+        $comment = new Comment_v2();
         try{
             $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("CALL security.comment_create(:auth_token,:post_id, :content)");
@@ -62,11 +47,15 @@ class CommentsRepository{
             $stmt->bindParam('post_id', $post_id, PDO::PARAM_INT);
             $stmt->bindParam('content', $content, PDO::PARAM_STR);
             $stmt->execute();
-            $id = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if(!empty($result)){
+                foreach (@$result as $row){
+                    $comment = $this->makeCommentFromRow($row);
+                }
+            }
         }
         catch (PDOException $e){
-            var_dump($e->getMessage());
-
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }elseif ($e->getCode() == 23000) {
@@ -76,11 +65,10 @@ class CommentsRepository{
             }
         }
         catch (Exception $e){
-            var_dump($e->getMessage());
             ResponseService::ResponseInternalError();
         }
 
-        return  $id;
+        return  $comment;
     }
 
     private function getDatabaseConnection(){
@@ -89,6 +77,31 @@ class CommentsRepository{
     //---------------------------------------------------------------------
     //---------------------------------------------------------------------
     //---------------------------------------------------------------------
+
+    private function makeCommentsFromResultSet($result){
+        $commentsArray = [];
+        foreach (@$result as $row){
+            array_push($commentsArray,$this->makeCommentFromRow($row));
+        }
+        return $commentsArray;
+    }
+
+    private function makeCommentFromRow($row){
+        $comment = new Comment_v2();
+        $comment->construct(
+            $row['id'],
+            $row['user_id'],
+            $row['username'],
+            $row['post_id'],
+            $row['content'],
+            $row['created_timestamp'],
+            $row['updated_timestamp'],
+            $row['deleted_timestamp']
+        );
+        return $comment;
+    }
 }
+
+
 
 ?>

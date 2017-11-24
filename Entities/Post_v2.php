@@ -50,7 +50,8 @@ class Post_v2{
         $this->title = SanitizeService::SanitizeString($this->title);
         $this->content = SanitizeService::SanitizeString($this->content);
         if (!$validation->isValidToken($token)) ResponseService::ResponseBadRequest("Invalid Request-Body");
-        $this->id = $procedures->createPost($token,$this->title,$this->content);
+
+        return $procedures->createPost($token,$this->title,$this->content);
     }
 
     public function getRecent($token,$amount,$offset){
@@ -91,8 +92,8 @@ class Post_v2{
     }
 
 
-    public function idToJson(){
-        return json_encode($this->id);
+    public function toJson(){
+        return json_encode(get_object_vars($this));
     }
 
     private function failOnInvalidModel(){
