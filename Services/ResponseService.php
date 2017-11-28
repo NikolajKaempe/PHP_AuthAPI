@@ -84,7 +84,6 @@ class ResponseService
         header("HTTP/1.1 500");
         header('Content-Type: application/json');
         http_response_code(500);
-
         if($msg != "undefined"){
             echo '{"message":"'.$msg.'"}';
         }

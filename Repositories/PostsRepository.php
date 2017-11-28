@@ -32,10 +32,12 @@ class PostsRepository{
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }else{
+                var_dump($e->getMessage());
                 ResponseService::ResponseInternalError();
             }
         }
         catch (Exception $e){
+            var_dump($e->getMessage());
             ResponseService::ResponseInternalError();
         }
 
