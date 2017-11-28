@@ -2,7 +2,6 @@
 
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/DatabaseConnection.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
-include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
 
 class CommentsRepository{
 

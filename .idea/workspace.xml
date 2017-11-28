@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="958ae5de-f3a1-47e9-ba97-bc7c5de04a18" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Repositories/PostsRepository.php" afterPath="$PROJECT_DIR$/Repositories/PostsRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services/ResponseService.php" afterPath="$PROJECT_DIR$/Services/ResponseService.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Entities/Comment_v2.php" afterPath="$PROJECT_DIR$/Entities/Comment_v2.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Entities/Post_v2.php" afterPath="$PROJECT_DIR$/Entities/Post_v2.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Repositories/CommentsRepository.php" afterPath="$PROJECT_DIR$/Repositories/CommentsRepository.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,7 +15,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="PostsRepository.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PostsRepository.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Repositories/PostsRepository.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="567">
@@ -25,11 +25,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CommentsRepository.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CommentsRepository.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Repositories/CommentsRepository.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1764">
-              <caret line="84" column="9" lean-forward="false" selection-start-line="84" selection-start-column="9" selection-end-line="84" selection-end-column="9" />
+            <state relative-caret-position="357">
+              <caret line="17" column="56" lean-forward="true" selection-start-line="17" selection-start-column="56" selection-end-line="17" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -98,8 +98,8 @@
       <file leaf-file-name="Post_v2.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Entities/Post_v2.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="66" column="33" lean-forward="false" selection-start-line="66" selection-start-column="33" selection-end-line="66" selection-end-column="33" />
+            <state relative-caret-position="-421">
+              <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -108,8 +108,8 @@
       <file leaf-file-name="Comment_v2.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Entities/Comment_v2.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="903">
-              <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+            <state relative-caret-position="839">
+              <caret line="46" column="40" lean-forward="true" selection-start-line="46" selection-start-column="40" selection-end-line="46" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -145,6 +145,7 @@
       <find>A</find>
       <find>var_dump</find>
       <find>PostRepository</find>
+      <find>sanitize</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -183,12 +184,12 @@
         <option value="$PROJECT_DIR$/Logic/Validation.php" />
         <option value="$PROJECT_DIR$/Repositories/AuthProcedures.php" />
         <option value="$PROJECT_DIR$/CommentController.php" />
-        <option value="$PROJECT_DIR$/Entities/Comment_v2.php" />
         <option value="$PROJECT_DIR$/PostController_v2.php" />
-        <option value="$PROJECT_DIR$/Entities/Post_v2.php" />
-        <option value="$PROJECT_DIR$/Repositories/CommentsRepository.php" />
         <option value="$PROJECT_DIR$/Services/ResponseService.php" />
         <option value="$PROJECT_DIR$/Repositories/PostsRepository.php" />
+        <option value="$PROJECT_DIR$/Entities/Post_v2.php" />
+        <option value="$PROJECT_DIR$/Entities/Comment_v2.php" />
+        <option value="$PROJECT_DIR$/Repositories/CommentsRepository.php" />
       </list>
     </option>
   </component>
@@ -236,6 +237,11 @@
               <item name="WebSec" type="b2602c69:ProjectViewProjectNode" />
               <item name="WebSec" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Entities" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="WebSec" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WebSec" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Repositories" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="WebSec" type="b2602c69:ProjectViewProjectNode" />
@@ -397,12 +403,12 @@
       <workItem from="1511530397847" duration="2253000" />
       <workItem from="1511828077553" duration="254000" />
       <workItem from="1511859436013" duration="2473000" />
-      <workItem from="1511872420136" duration="229000" />
+      <workItem from="1511872420136" duration="849000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="230544000" />
+    <option name="totallyTimeSpent" value="231164000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1060" extended-state="6" />
@@ -644,22 +650,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Entities/CommentModel.php" />
-    <entry file="file://$PROJECT_DIR$/Entities/Comment_v2.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="903">
-          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories/CommentsRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1764">
-          <caret line="84" column="9" lean-forward="false" selection-start-line="84" selection-start-column="9" selection-end-line="84" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Logic/Validation.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2562">
@@ -700,18 +690,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Entities/Post_v2.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="66" column="33" lean-forward="false" selection-start-line="66" selection-start-column="33" selection-end-line="66" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Repositories/PostsRepository.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="567">
           <caret line="39" column="39" lean-forward="true" selection-start-line="39" selection-start-column="39" selection-end-line="39" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Entities/Post_v2.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-421">
+          <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Entities/Comment_v2.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="839">
+          <caret line="46" column="40" lean-forward="true" selection-start-line="46" selection-start-column="40" selection-end-line="46" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Repositories/CommentsRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="17" column="56" lean-forward="true" selection-start-line="17" selection-start-column="56" selection-end-line="17" selection-end-column="56" />
           <folding />
         </state>
       </provider>

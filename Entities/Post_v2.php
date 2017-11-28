@@ -47,8 +47,8 @@ class Post_v2{
         $this->failOnInvalidModel();
         $validation = new Validation();
         $procedures = new PostsRepository();
-        $this->title = SanitizeService::SanitizeString($this->title);
-        $this->content = SanitizeService::SanitizeString($this->content);
+        $this->title = $this->title;
+        $this->content = $this->content;
         if (!$validation->isValidToken($token)) ResponseService::ResponseBadRequest("Invalid Request-Body");
 
         return $procedures->createPost($token,$this->title,$this->content);

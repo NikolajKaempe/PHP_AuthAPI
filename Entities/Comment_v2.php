@@ -44,7 +44,7 @@ class Comment_v2{
         $this->failOnInvalidModel();
         $validation = new Validation();
         $procedures = new CommentsRepository();
-        $this->content = SanitizeService::SanitizeString($this->content);
+        $this->content = $this->content;
         if (!$validation->isValidToken($token)) ResponseService::ResponseBadRequest("Invalid Request-Body");
 
         return $procedures->createComment($token,$this->post_id,$this->content);
