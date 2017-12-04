@@ -10,7 +10,8 @@ include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/RequestService.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/PostsRepository.php');
-include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/Post_v2.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/Post.php');
+
 
 $method = $_SERVER['REQUEST_METHOD'];
 $reqBody = file_get_contents('php://input');
@@ -25,6 +26,9 @@ RequestService::TokenCheck();
 $token = RequestService::GetToken();
 
 $postRepository = new PostsRepository();
+//$referer = $_SERVER["HTTP_REFERER"];
+
+//if ($referer != "C:\wamp64\www\WebSec\PostController.php") ResponseService::ResponseNotAuthorized("CSRF? - Nice Attampt! ") ;
 
 switch ($method){
     case 'GET':
@@ -44,7 +48,7 @@ function getPosts($token,$defaultAmount,$defaultOffset){
     $userId     = RequestService::isNumericUrlParamDefined('user_id')? $_GET['user_id'] : 0;
 
 
-    $post = new Post_v2();
+    $post = new Post();
 
     if ( $userId === 0){
         $posts = $post->getRecent($token,$postAmount,$postOffset);
@@ -55,7 +59,7 @@ function getPosts($token,$defaultAmount,$defaultOffset){
 }
 
 function createPost($input,$token){
-    $post = new Post_v2();
+    $post = new Post();
     $post->constructFromHashMap($input);
     $post = $post->createPost($token);
     ResponseService::ResponseJSON($post->toJson());

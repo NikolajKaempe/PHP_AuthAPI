@@ -12,7 +12,7 @@ include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Logic/Validation.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
 
 
-class Comment_v2{
+class Comment{
 
     private $id;
     private $user_id;
@@ -44,14 +44,14 @@ class Comment_v2{
         $this->failOnInvalidModel();
         $validation = new Validation();
         $procedures = new CommentsRepository();
-        $this->content = $this->content;
+
         if (!$validation->isValidToken($token)) ResponseService::ResponseBadRequest("Invalid Request-Body");
 
         return $procedures->createComment($token,$this->post_id,$this->content);
 
     }
 
-    public function getCommentsFromPost($token, $post_id, $amount, $offset){
+    public static function getCommentsFromPost($token, $post_id, $amount, $offset){
         $validation = new Validation();
         $procedures = new CommentsRepository();
 

@@ -13,7 +13,7 @@ include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Logic/Validation.php');
 /**
  * Class Post_v2 My version of the Post Class, including functionality
  */
-class Post_v2{
+class Post{
 
     private $id;
     private $user_id;
@@ -47,8 +47,7 @@ class Post_v2{
         $this->failOnInvalidModel();
         $validation = new Validation();
         $procedures = new PostsRepository();
-        $this->title = $this->title;
-        $this->content = $this->content;
+
         if (!$validation->isValidToken($token)) ResponseService::ResponseBadRequest("Invalid Request-Body");
 
         return $procedures->createPost($token,$this->title,$this->content);
@@ -59,8 +58,8 @@ class Post_v2{
         $procedures = new PostsRepository();
 
         if (!$validation->isValidToken($token) ||
-        !is_numeric($amount) ||
-        !is_numeric($offset)) {
+            !is_numeric($amount) ||
+            !is_numeric($offset)) {
             ResponseService::ResponseBadRequest("Invalid Request-Body");
         }
 
@@ -103,6 +102,6 @@ class Post_v2{
             !$validation->isValidContent($this->content)){
             ResponseService::ResponseBadRequest("Invalid Request-Body");
         }
-     }
+    }
 
 }

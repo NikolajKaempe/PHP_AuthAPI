@@ -38,7 +38,7 @@ class CommentsRepository{
     //---------------------------------------------------------------------
 
     public function createComment($token, $post_id, $content){
-        $comment = new Comment_v2();
+        $comment = new Comment();
         try{
             $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("CALL security.comment_create(:auth_token,:post_id, :content)");
@@ -86,7 +86,7 @@ class CommentsRepository{
     }
 
     private function makeCommentFromRow($row){
-        $comment = new Comment_v2();
+        $comment = new Comment();
         $comment->construct(
             $row['id'],
             $row['user_id'],

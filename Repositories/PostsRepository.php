@@ -3,8 +3,7 @@
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/DatabaseConnection.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/SanitizeService.php');
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Services/ResponseService.php');
-include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/Post_v2.php');
-
+include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/Post.php');
 
 
 class PostsRepository{
@@ -79,7 +78,7 @@ class PostsRepository{
     
     //--------------------------------------------------------------------------
     public function createPost($authToken, $title, $content){
-        $post = new Post_v2();
+        $post = new Post();
         try{
             $connection = $this->getDatabaseConnection();
             $stmt = $connection->prepare("CALL security.post_create(:auth_token ,:title, :content)");
@@ -129,7 +128,7 @@ function makePostsFromResultSet($result){
 }
 
 function makePostFromRow($row){
-    $post = new Post_v2();
+    $post = new Post();
 
     $post->construct(
         $row['id'],
