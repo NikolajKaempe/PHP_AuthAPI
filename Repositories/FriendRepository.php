@@ -21,7 +21,6 @@ class FriendRepository{
 
         }
         catch (PDOException $e){
-            var_dump($e);
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }
@@ -30,7 +29,6 @@ class FriendRepository{
             }
         }
         catch (Exception $e){
-            var_dump($e);
             ResponseService::ResponseInternalError();
         }
         return $result;
@@ -46,7 +44,6 @@ class FriendRepository{
 
         }
         catch (PDOException $e){
-            var_dump($e);
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }
@@ -55,7 +52,6 @@ class FriendRepository{
             }
         }
         catch (Exception $e){
-            var_dump($e);
             ResponseService::ResponseInternalError();
         }
         return $result;
@@ -71,7 +67,6 @@ class FriendRepository{
 
         }
         catch (PDOException $e){
-            var_dump($e);
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }
@@ -80,7 +75,6 @@ class FriendRepository{
             }
         }
         catch (Exception $e){
-            var_dump($e);
             ResponseService::ResponseInternalError();
         }
         return $result;
@@ -95,7 +89,6 @@ class FriendRepository{
             $stmt->execute();
         }
         catch (PDOException $e){
-            var_dump($e->getCode());
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }
@@ -104,7 +97,6 @@ class FriendRepository{
             }
         }
         catch (Exception $e){
-            var_dump($e);
             ResponseService::ResponseInternalError();
         }
     }
@@ -119,7 +111,6 @@ class FriendRepository{
             $stmt->execute();
         }
         catch (PDOException $e){
-            var_dump($e);
 
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
@@ -130,7 +121,6 @@ class FriendRepository{
             }
         }
         catch (Exception $e){
-            var_dump($e);
             ResponseService::ResponseInternalError();
         }
     }
