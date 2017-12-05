@@ -156,8 +156,144 @@ class PostsRepository{
         }
     }
 
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
+    public static function getDefaultPostPreferences($token){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("CALL security.preference_post_get_defaults_from_user(:auth_token)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch (PDOException $e){
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }
+            else{
+                ResponseService::ResponseInternalError();
+            }
+        }
+        catch (Exception $e){
+            ResponseService::ResponseInternalError();
+        }
+        return $result;
+    }
+
+    public static function updateDefaultPostPreference($token,$typeId,$levelId){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("CALL security.preference_post_update_default(:auth_token, :type_id, :level_id)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
+            $stmt->bindParam('type_id', $typeId, PDO::PARAM_INT );
+            $stmt->bindParam('level_id', $levelId, PDO::PARAM_INT );
+            $stmt->execute();
+        }
+        catch (PDOException $e){
+            var_dump($e->getMessage());
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }
+            else{
+                ResponseService::ResponseInternalError();
+            }
+        }
+        catch (Exception $e){
+            ResponseService::ResponseInternalError();
+        }
+    }
+
+    public static function getSpecificPostPreferences($token,$postId){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("CALL security.preference_post_get_from_post(:auth_token, :post_id)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
+            $stmt->bindParam('post_id', $postId, PDO::PARAM_INT );
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch (PDOException $e){
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }
+            else{
+                ResponseService::ResponseInternalError();
+            }
+        }
+        catch (Exception $e){
+            ResponseService::ResponseInternalError();
+        }
+        return $result;
+    }
+
+    public static function updateSpecificPostPreference($token,$postId,$typeId,$levelId){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("CALL security.preference_post_update(:auth_token, :post_id, :type_id, :level_id)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
+            $stmt->bindParam('post_id', $postId, PDO::PARAM_INT );
+            $stmt->bindParam('type_id', $typeId, PDO::PARAM_INT );
+            $stmt->bindParam('level_id', $levelId, PDO::PARAM_INT );
+            $stmt->execute();
+        }
+        catch (PDOException $e){
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }
+            else{
+                ResponseService::ResponseInternalError();
+            }
+        }
+        catch (Exception $e){
+            ResponseService::ResponseInternalError();
+        }
+
+    }
+
+    public static function restorePostPreferenceToDefault($token,$postId){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("CALL security.preference_post_reset_to_default(:auth_token, :post_id)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
+            $stmt->bindParam('post_id', $postId, PDO::PARAM_INT );
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch (PDOException $e){
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }elseif ($e->getCode() == "HY000"){
+                ResponseService::ResponseInternalError("Database Version Problems :/ ");
+            }else{
+                ResponseService::ResponseInternalError();
+            }
+        }
+        catch (Exception $e){
+            ResponseService::ResponseInternalError();
+        }
+        return $result;
+    }
+
+    public static function getPostPreferenceTypes($token){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("CALL security.preference_post_get_types(:auth_token)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch (PDOException $e){
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }
+            else{
+                ResponseService::ResponseInternalError();
+            }
+        }
+        catch (Exception $e){
+            ResponseService::ResponseInternalError();
+        }
+        return $result;
+    }
+
     private function getDatabaseConnection(){
         return DatabaseConnection::getConnection();
     }

@@ -67,7 +67,6 @@ class PreferenceRepository{
 
         }
         catch (PDOException $e){
-            var_dump($e);
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }
@@ -76,7 +75,6 @@ class PreferenceRepository{
             }
         }
         catch (Exception $e){
-            var_dump($e);
             ResponseService::ResponseInternalError();
         }
         return $result;

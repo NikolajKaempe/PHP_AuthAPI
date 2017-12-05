@@ -21,6 +21,8 @@ class RequestService
         // CHECK IF Authorization HEADER contains Token
         checkIfTokenExist($headers['Authorization']);
 
+
+
     }
 
     //--------------------------------------------------------------------------

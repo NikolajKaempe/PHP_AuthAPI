@@ -13,6 +13,7 @@ include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/PostsRepository.php
 include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Entities/Post.php');
 
 
+$request = (empty($_SERVER['PATH_INFO']))? "/" : $_SERVER['PATH_INFO'] ;
 $method = $_SERVER['REQUEST_METHOD'];
 $reqBody = file_get_contents('php://input');
 
@@ -27,25 +28,70 @@ $token = RequestService::GetToken();
 
 $postRepository = new PostsRepository();
 
-switch ($method){
-    case 'GET':
-        getPosts($token,$POSTS_DEFAULT_AMOUNT,$POSTS_DEFAULT_OFFSET);
+
+switch ($request){
+    case "/":
+        switch ($method){
+            case 'GET':
+                getPosts($token,$POSTS_DEFAULT_AMOUNT,$POSTS_DEFAULT_OFFSET);
+                break;
+            case 'POST':
+                createPost($reqBody,$token);
+                break;
+            case 'PUT':
+                $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid Post");
+                updatePost($reqBody,$token,$id);
+                break;
+            case 'DELETE':
+                $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid Post");
+                deletePost($token,$id);
+                break;
+            default:
+                ResponseService::ResponseNotFound();
+                break;
+        }
         break;
-    case 'POST':
-        createPost($reqBody,$token);
+
+    case "/Preferences":
+        switch ($method) {
+            case 'GET':
+                getDefaultPostPreferences($token);
+                break;
+
+            case "PUT":
+                updateDefaultPostPreference($token,$reqBody);
+                break;
+        }
         break;
-    case 'PUT':
-        $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid Post");
-        updatePost($reqBody,$token,$id);
+
+    case "/Preferences/":
+        switch ($method) {
+            case 'GET':
+                $id = RequestService::isNumericUrlParamDefined('post_id')? $_GET['post_id'] : ResponseService::ResponseBadRequest("Invalid Post");
+                getSpecificPostPreferences($token,$id);
+                break;
+
+            case "PUT":
+                $id = RequestService::isNumericUrlParamDefined('post_id')? $_GET['post_id'] : ResponseService::ResponseBadRequest("Invalid Post");
+                updateSpecificPostPreference($token,$id,$reqBody);
+                break;
+
+            case "DELETE":
+                $id = RequestService::isNumericUrlParamDefined('post_id')? $_GET['post_id'] : ResponseService::ResponseBadRequest("Invalid Post");
+                restorePostPreferenceToDefault($token,$id);
+                break;
+        }
         break;
-    case 'DELETE':
-        $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid Post");
-        deletePost($token,$id);
+
+    case "/Preferences/Types" :
+        getPostPreferenceTypes($token);
         break;
+
     default:
         ResponseService::ResponseNotFound();
         break;
 }
+
 
 function getPosts($token,$defaultAmount,$defaultOffset){
     $postAmount = RequestService::isNumericUrlParamDefined('amount') ? $_GET['amount'] : $defaultAmount;
@@ -79,5 +125,51 @@ function updatePost($input,$token,$id){
 function deletePost($token,$id){
     Post::deletePost($token,$id);
     ResponseService::ResponseOk();
+}
+
+function getDefaultPostPreferences($token){
+    $result = PostsRepository::getDefaultPostPreferences($token);
+    ResponseService::ResponseJSON(json_encode($result));
+}
+
+function updateDefaultPostPreference($token,$input){
+    $typeId = RequestService::getParamFromRequestBody($input,"type_id");
+    $levelId = RequestService::getParamFromRequestBody($input,"level_id");
+
+    if ($typeId === ""  || !is_numeric($typeId) ||
+        $levelId === ""  || !is_numeric($levelId)){
+        ResponseService::ResponseBadRequest("Invalid Request-Body");
+    }
+
+    PostsRepository::updateDefaultPostPreference($token,$typeId,$levelId);
+    ResponseService::ResponseOk();
+}
+
+function getSpecificPostPreferences($token,$postId){
+    $result = PostsRepository::getSpecificPostPreferences($token,$postId);
+    ResponseService::ResponseJSON(json_encode($result));
+}
+
+function updateSpecificPostPreference($token,$postId,$input){
+    $typeId = RequestService::getParamFromRequestBody($input,"type_id");
+    $levelId = RequestService::getParamFromRequestBody($input,"level_id");
+
+    if ($typeId === ""  || !is_numeric($typeId) ||
+        $levelId === ""  || !is_numeric($levelId)){
+        ResponseService::ResponseBadRequest("Invalid Request-Body");
+    }
+
+    PostsRepository::updateSpecificPostPreference($token,$postId,$typeId,$levelId);
+    ResponseService::ResponseOk();
+}
+
+function restorePostPreferenceToDefault($token,$postId){
+    $result = PostsRepository::restorePostPreferenceToDefault($token,$postId);
+    ResponseService::ResponseJSON(json_encode($result));
+}
+
+function getPostPreferenceTypes($token){
+    $result = PostsRepository::getPostPreferenceTypes($token);
+    ResponseService::ResponseJSON(json_encode($result));
 }
 
