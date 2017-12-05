@@ -108,6 +108,54 @@ class PostsRepository{
         return $post;
     }
 
+    public static function updatePost($token,$id, $title ,$content){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("CALL security.post_update(:auth_token, :id, :title, :content)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
+            $stmt->bindParam('title', $title, PDO::PARAM_STR);
+            $stmt->bindParam('content', $content, PDO::PARAM_STR);
+            $stmt->execute();
+
+        }
+        catch (PDOException $e){
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }elseif ($e->getCode() == 23000) {
+                ResponseService::ResponseBadRequest("Invalid Comment");
+            }else{
+                ResponseService::ResponseInternalError();
+            }
+        }
+        catch (Exception $e){
+            ResponseService::ResponseInternalError();
+        }
+    }
+
+
+    public static function deletePost($token,$id){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("CALL security.post_delete(:auth_token,:id)");
+            $stmt->bindParam('auth_token', $token, PDO::PARAM_STR );
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+        }
+        catch (PDOException $e){
+            if ($e->getCode() == 45000) {
+                ResponseService::ResponseBadRequest($e->errorInfo[2]);
+            }elseif ($e->getCode() == 23000) {
+                ResponseService::ResponseBadRequest("Invalid Comment");
+            }else{
+                ResponseService::ResponseInternalError();
+            }
+        }
+        catch (Exception $e){
+            ResponseService::ResponseInternalError();
+        }
+    }
+
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
     private function getDatabaseConnection(){

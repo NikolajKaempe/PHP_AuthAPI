@@ -26,9 +26,6 @@ RequestService::TokenCheck();
 $token = RequestService::GetToken();
 
 $postRepository = new PostsRepository();
-//$referer = $_SERVER["HTTP_REFERER"];
-
-//if ($referer != "C:\wamp64\www\WebSec\PostController.php") ResponseService::ResponseNotAuthorized("CSRF? - Nice Attampt! ") ;
 
 switch ($method){
     case 'GET':
@@ -36,6 +33,14 @@ switch ($method){
         break;
     case 'POST':
         createPost($reqBody,$token);
+        break;
+    case 'PUT':
+        $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid Post");
+        updatePost($reqBody,$token,$id);
+        break;
+    case 'DELETE':
+        $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid Post");
+        deletePost($token,$id);
         break;
     default:
         ResponseService::ResponseNotFound();
@@ -46,7 +51,6 @@ function getPosts($token,$defaultAmount,$defaultOffset){
     $postAmount = RequestService::isNumericUrlParamDefined('amount') ? $_GET['amount'] : $defaultAmount;
     $postOffset = RequestService::isNumericUrlParamDefined('offset') ? $_GET['offset'] : $defaultOffset;
     $userId     = RequestService::isNumericUrlParamDefined('user_id')? $_GET['user_id'] : 0;
-
 
     $post = new Post();
 
@@ -63,5 +67,17 @@ function createPost($input,$token){
     $post->constructFromHashMap($input);
     $post = $post->createPost($token);
     ResponseService::ResponseJSON($post->toJson());
+}
+
+function updatePost($input,$token,$id){
+    $post = new Post();
+    $post->constructFromHashMap($input);
+    $post->updatePost($token,$id);
+    ResponseService::ResponseOk();
+}
+
+function deletePost($token,$id){
+    Post::deletePost($token,$id);
+    ResponseService::ResponseOk();
 }
 

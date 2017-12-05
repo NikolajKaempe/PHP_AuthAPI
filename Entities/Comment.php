@@ -64,6 +64,15 @@ class Comment{
         return $procedures->getCommentsOfPost($token, $post_id, $amount, $offset);
     }
 
+    public function updateComment($token,$id){
+        $this->failOnInvalidModel();
+        CommentsRepository::updateComment($token,$id,$this->content);
+    }
+
+    public static function deleteComment($token,$id){
+        CommentsRepository::deleteComment($token,$id);
+    }
+
     public function arrayToJson($comments){
         $result = "[";
         if (!empty($comments) ){

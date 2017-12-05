@@ -78,6 +78,16 @@ class Post{
         return $procedures->getPostsByUser($token,$userId,$amount,$offset);
     }
 
+    public function updatePost($token,$id){
+        $this->failOnInvalidModel();
+        PostsRepository::updatePost($token,$id,$this->title,$this->content);
+    }
+
+    public static function deletePost($token,$id){
+        PostsRepository::deletePost($token,$id);
+
+    }
+
     public function arrayToJson($posts){
         $result = "[";
         if (!empty($posts)){

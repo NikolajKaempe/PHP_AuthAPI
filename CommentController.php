@@ -10,7 +10,8 @@ RequestService::TokenCheck();
 
 $token = RequestService::GetToken();
 $requestHttpMethod = $_SERVER['REQUEST_METHOD'];
-var_dump($_SERVER["HTTP_REFERER"]);
+$requestBody = file_get_contents('php://input');
+
 switch ($requestHttpMethod){
     case 'GET':
         $post_id = RequestService::isNumericUrlParamDefined('post_id')? $_GET['post_id'] : ResponseService::ResponseBadRequest("Invalid Post");
@@ -23,18 +24,42 @@ switch ($requestHttpMethod){
         break;
 
     case 'POST':
-        $sRequestBody = file_get_contents('php://input');
-        createComment($token,$sRequestBody);
+        createComment($token,$requestBody);
+        break;
+
+    case 'PUT':
+        $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid comment");
+        updateComment($token,$requestBody,$id);
+        break;
+
+    case 'DELETE' :
+        $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid comment");
+        deleteComment($token,$id);
+        break;
+
+    default:
+        ResponseService::ResponseNotFound();
         break;
 }
 
-// ++ //
 function createComment($token, $input){
     $comment = new Comment();
     $comment->constructFromHashMap($input);
     $comment = $comment->createComment($token);
     ResponseService::ResponseJSON($comment->toJson());
 
+}
+
+function updateComment($token, $input,$id){
+    $comment = new Comment();
+    $comment->constructFromHashMap($input);
+    $comment->updateComment($token,$id);
+    ResponseService::ResponseOk();
+}
+
+function deleteComment($token,$id){
+    Comment::deleteComment($token,$id);
+    ResponseService::ResponseOk();
 }
 
 ?>
