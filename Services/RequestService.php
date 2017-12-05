@@ -97,6 +97,11 @@ class RequestService
         return RequestService::isParamSet($paramName) && RequestService::isNumeric($paramName);
     }
 
+    public static function getParamFromRequestBody($body, $paramName){
+        $data = json_decode($body, true);
+        return (empty($data[$paramName]))? "" : $data[$paramName];
+    }
+
     public static function fetIP(){
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
