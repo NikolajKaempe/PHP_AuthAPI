@@ -39,11 +39,11 @@ switch ($request){
                 createPost($reqBody,$token);
                 break;
             case 'PUT':
-                $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid Post");
+                $id = RequestService::isNumericUrlParamDefined('post_id')? $_GET['post_id'] : ResponseService::ResponseBadRequest("Invalid Post");
                 updatePost($reqBody,$token,$id);
                 break;
             case 'DELETE':
-                $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid Post");
+                $id = RequestService::isNumericUrlParamDefined('post_id')? $_GET['post_id'] : ResponseService::ResponseBadRequest("Invalid Post");
                 deletePost($token,$id);
                 break;
             default:

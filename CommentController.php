@@ -28,12 +28,12 @@ switch ($requestHttpMethod){
         break;
 
     case 'PUT':
-        $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid comment");
+        $id = RequestService::isNumericUrlParamDefined('comment_id')? $_GET['comment_id'] : ResponseService::ResponseBadRequest("Invalid comment");
         updateComment($token,$requestBody,$id);
         break;
 
     case 'DELETE' :
-        $id = RequestService::isNumericUrlParamDefined('id')? $_GET['id'] : ResponseService::ResponseBadRequest("Invalid comment");
+        $id = RequestService::isNumericUrlParamDefined('comment_id')? $_GET['comment_id'] : ResponseService::ResponseBadRequest("Invalid comment");
         deleteComment($token,$id);
         break;
 
