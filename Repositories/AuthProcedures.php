@@ -43,8 +43,12 @@ class AuthProcedures{
                 }
             }
 
-        }catch (Exception $e){
-            $salt = "dummy";
+        } catch (PDOException $e){
+            ResponseService::ResponseNotAuthorized();
+
+        }
+        catch (Exception $e){
+            ResponseService::ResponseNotAuthorized();
         }
         return $salt;
     }
