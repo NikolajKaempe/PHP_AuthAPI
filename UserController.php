@@ -18,6 +18,9 @@ $reqBody = file_get_contents('php://input');
 $ipAddress = RequestService::fetIP();
 RequestService::enableCORS();
 
+RequestService::TokenCheck();
+$token = RequestService::GetToken();
+
 
 
 switch ($request){
@@ -32,6 +35,19 @@ switch ($request){
         break;
     case '/Logout':
         ResponseService::ResponseNotImplemented();
+        break;
+    case '/Picture':
+        switch ($method){
+            case 'GET':
+                getPicture($token);
+                break;
+            case 'POST':
+                updatePicture($token,$reqBody);
+                break;
+            default:
+                ResponseService::ResponseNotFound();
+                break;
+        }
         break;
     default:
         ResponseService::ResponseNotFound();
@@ -52,5 +68,18 @@ function tryLogin($input, $ip){
     $authToken = $User->tryLogin($ip);
     ResponseService::ResponseJSON($authToken->toJson());
 }
+
+function getPicture($token){
+    $picture = RequestService::isNumericUrlParamDefined('user_id')? User::getPictureFromId($token,$_GET['user_id']) : User::getPicture($token);
+    var_dump($picture);
+    ResponseService::ResponseJSON(json_encode($picture));
+}
+
+function updatePicture($token,$input){
+    $picture = RequestService::getParamFromRequestBody($input,"picture");
+    if ($picture === "" || empty($picture)){ ResponseService::ResponseBadRequest("Invalid Request-Body"); }
+    User::updatePicture($token,$picture);
+}
+
 
 ?>

@@ -151,6 +151,20 @@ class User{
         return $token;
     }
 
+    public static function getPicture($token){
+        return AuthProcedures::getProfilePicture($token);
+    }
+
+    public static function getPictureFromId($token,$user_id){
+        echo "Get from ID";
+        return AuthProcedures::getProfilePictureFromId($token,$user_id);
+
+    }
+
+    public static function updatePicture($token,$picture){
+        AuthProcedures::setProfilePicture($token,$picture);
+    }
+
     /**
      * Returns a string representing a JSon-object constructed from the UserObject's fields.
      * @return string representing a JSon-object constructed from the UserObject's fields.

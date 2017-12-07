@@ -110,6 +110,64 @@ class AuthProcedures{
         }
     }
 
+    public static function getProfilePicture($token){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("call security.pictures_get_from_token(:auth_token)");
+            $stmt->bindParam(":auth_token", $token);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        } catch (PDOException $e){
+            ResponseService::ResponseNotAuthorized();
+
+        }
+        catch (Exception $e){
+            ResponseService::ResponseNotAuthorized();
+        }
+        return $result;
+    }
+
+    public static function getProfilePictureFromId($token,$user_id){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("call security.pictures_get_from_user(:auth_token, :user_id)");
+            $stmt->bindParam(":auth_token", $token);
+            $stmt->bindParam(":user_id", $user_id);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        } catch (PDOException $e){
+            ResponseService::ResponseNotAuthorized();
+
+        }
+        catch (Exception $e){
+            ResponseService::ResponseNotAuthorized();
+        }
+        return $result;
+    }
+
+    public static function setProfilePicture($token, $base64Picture){
+        try{
+            $connection = DatabaseConnection::getConnection();
+            $stmt = $connection->prepare("call security.pictures_update(:auth_token, :picture)");
+
+            $stmt->bindParam(":auth_token", $token);
+            $stmt->bindParam(":picture", $base64Picture);
+            $stmt->execute();
+
+        } catch (PDOException $e){
+            var_dump($e);
+            ResponseService::ResponseNotAuthorized();
+
+        }
+        catch (Exception $e){
+            ResponseService::ResponseNotAuthorized();
+        }
+    }
+
     private function getDatabaseConnection(){
         return DatabaseConnection::getConnection();
     }
