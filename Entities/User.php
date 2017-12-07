@@ -156,7 +156,6 @@ class User{
     }
 
     public static function getPictureFromId($token,$user_id){
-        echo "Get from ID";
         return AuthProcedures::getProfilePictureFromId($token,$user_id);
 
     }

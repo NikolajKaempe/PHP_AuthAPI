@@ -71,7 +71,6 @@ function tryLogin($input, $ip){
 
 function getPicture($token){
     $picture = RequestService::isNumericUrlParamDefined('user_id')? User::getPictureFromId($token,$_GET['user_id']) : User::getPicture($token);
-    var_dump($picture);
     ResponseService::ResponseJSON(json_encode($picture));
 }
 

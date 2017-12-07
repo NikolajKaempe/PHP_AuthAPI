@@ -188,7 +188,6 @@ class PostsRepository{
             $stmt->execute();
         }
         catch (PDOException $e){
-            var_dump($e->getMessage());
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }

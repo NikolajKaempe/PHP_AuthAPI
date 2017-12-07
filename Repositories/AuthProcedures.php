@@ -159,7 +159,6 @@ class AuthProcedures{
             $stmt->execute();
 
         } catch (PDOException $e){
-            var_dump($e);
             ResponseService::ResponseNotAuthorized();
 
         }
