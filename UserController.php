@@ -18,8 +18,6 @@ $reqBody = file_get_contents('php://input');
 $ipAddress = RequestService::fetIP();
 RequestService::enableCORS();
 
-RequestService::TokenCheck();
-$token = RequestService::GetToken();
 
 
 
@@ -37,6 +35,8 @@ switch ($request){
         ResponseService::ResponseNotImplemented();
         break;
     case '/Picture':
+        RequestService::TokenCheck();
+        $token = RequestService::GetToken();
         switch ($method){
             case 'GET':
                 getPicture($token);

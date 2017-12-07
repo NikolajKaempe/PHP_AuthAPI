@@ -13,9 +13,8 @@ include_once($_SERVER["DOCUMENT_ROOT"].'/WebSec/Repositories/PreferenceRepositor
 
 RequestService::enableCORS();
 RequestService::TokenCheck();
-
-
 $token = RequestService::GetToken();
+
 $request = $_SERVER['PATH_INFO'];
 $requestHttpMethod = $_SERVER['REQUEST_METHOD'];
 $requestBody = file_get_contents('php://input');
