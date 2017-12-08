@@ -97,14 +97,16 @@ function getPosts($token,$defaultAmount,$defaultOffset){
     $postAmount = RequestService::isNumericUrlParamDefined('amount') ? $_GET['amount'] : $defaultAmount;
     $postOffset = RequestService::isNumericUrlParamDefined('offset') ? $_GET['offset'] : $defaultOffset;
     $userId     = RequestService::isNumericUrlParamDefined('user_id')? $_GET['user_id'] : 0;
+    $recent     = RequestService::isParamSet('recent')? true : false;
 
     $post = new Post();
 
-    if ( $userId === 0){
+    if ($recent){
         $posts = $post->getRecent($token,$postAmount,$postOffset);
     }else{
         $posts = $post->getFromUser($token,$userId,$postAmount,$postOffset);
     }
+    
     ResponseService::ResponseJSON($post->arrayToJson($posts));
 }
 
