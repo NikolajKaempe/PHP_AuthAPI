@@ -62,6 +62,7 @@ class PostsRepository{
             }
         }
         catch (PDOException $e){
+            echo $e;
             if ($e->getCode() == 45000) {
                 ResponseService::ResponseBadRequest($e->errorInfo[2]);
             }else{

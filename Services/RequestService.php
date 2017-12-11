@@ -96,7 +96,7 @@ class RequestService
 
     // CHECK IF URL PARAM DEFINED && IT IS A NUMBER
     public static  function isNumericUrlParamDefined($paramName){
-        return RequestService::isParamSet($paramName) && RequestService::isNumeric($paramName);
+        return RequestService::isParamSet($paramName) && RequestService::isNumeric($paramName) && $paramName <= 2147483647;
     }
 
     public static function getParamFromRequestBody($body, $paramName){

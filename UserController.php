@@ -70,7 +70,12 @@ function tryLogin($input, $ip){
 }
 
 function getPicture($token){
-    $picture = RequestService::isNumericUrlParamDefined('user_id')? User::getPictureFromId($token,$_GET['user_id']) : User::getPicture($token);
+    if (RequestService::isParamSet("user_id")){
+        $picture = RequestService::isNumericUrlParamDefined('user_id')? User::getPictureFromId($token,$_GET['user_id']) : ResponseService::ResponseBadRequest();
+    }else{
+        $picture = User::getPicture($token);
+    }
+
     ResponseService::ResponseJSON(json_encode($picture));
 }
 

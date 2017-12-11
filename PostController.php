@@ -106,7 +106,7 @@ function getPosts($token,$defaultAmount,$defaultOffset){
     }else{
         $posts = $post->getFromUser($token,$userId,$postAmount,$postOffset);
     }
-    
+
     ResponseService::ResponseJSON($post->arrayToJson($posts));
 }
 
